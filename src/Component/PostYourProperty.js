@@ -38,7 +38,7 @@ const PostYourProperty = () => {
   };
 
   const [display, setDisplay] = useState({
-    disRoom: "none",
+    disRoom: "block",
     disFlat: "none",
     disPg: "none",
     disHostel: "none",
@@ -77,10 +77,9 @@ const PostYourProperty = () => {
         }
       })
       .catch((err) => console.log(err));
-  }, [])
-  
+  }, []);
 
-// Rendering User Data
+  // Rendering User Data
   useEffect(() => {
     axios(baseUrl + userID)
       .then((res) => {
@@ -277,7 +276,7 @@ const PostYourProperty = () => {
                     ref={inputRefs.emailRef}
                   />
                   <div className="input-group w-45 w--100 m-2">
-                  <div className="input-group-prepend">
+                    <div className="input-group-prepend">
                       <span className="input-group-text">+91</span>
                     </div>
                     <input
@@ -487,7 +486,7 @@ const PostYourProperty = () => {
                         <option value={area} className="text-capitalize">
                           {area}
                         </option>
-                      ))}                      
+                      ))}
                     </select>
                   </div>
                   <div className="form-group w-45 w--100 m-2">
@@ -506,7 +505,7 @@ const PostYourProperty = () => {
                       <option value="family">Family</option>
                     </select>
                   </div>
-                  <div className="w--100 w-45 d-flex justify-content-start align-items-center m-2">                   
+                  <div className="w--100 w-45 d-flex justify-content-start align-items-center m-2">
                     <span className="w-100 ml-2">Available From</span>
                     <input
                       type="date"
@@ -754,11 +753,11 @@ const PostYourProperty = () => {
                                   setSubPropertyData(e.target.value)
                                 }
                               >
-                                <option value="type" disabled selected>
-                                  Room Type
-                                </option>
                                 {category === "room" && (
                                   <>
+                                    <option value="type" disabled selected>
+                                      Room Type
+                                    </option>
                                     <option value="1rk">1 RK</option>
                                     <option value="1bhk">1 BHK</option>
                                     <option value="2bhk">2 BHK</option>
@@ -769,6 +768,9 @@ const PostYourProperty = () => {
                                 )}
                                 {category === "flat" && (
                                   <>
+                                    <option value="type" disabled selected>
+                                      Flat Type
+                                    </option>
                                     <option value="1rk">1 RK</option>
                                     <option value="1bhk">1 BHK</option>
                                     <option value="2bhk">2 BHK</option>
@@ -779,6 +781,9 @@ const PostYourProperty = () => {
                                 )}
                                 {category === "pg" && (
                                   <>
+                                    <option value="type" disabled selected>
+                                      PG Type
+                                    </option>
                                     <option value="single bed">
                                       Single Bed
                                     </option>
@@ -795,6 +800,9 @@ const PostYourProperty = () => {
                                 )}
                                 {category === "hostel" && (
                                   <>
+                                    <option value="type" disabled selected>
+                                      Hostel Type
+                                    </option>
                                     <option value="single bed">
                                       Single Bed
                                     </option>

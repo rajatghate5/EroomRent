@@ -9,7 +9,7 @@ const EditYourProperty = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [data, setData] = useState({});
   const [files, setFiles] = useState([]);
-
+  const [subCategory, setSubCategory] = useState("");
   const inputRefs = {
     nameRef: useRef(),
     emailRef: useRef(),
@@ -32,7 +32,7 @@ const EditYourProperty = () => {
     tenantTypeRef: useRef(),
     availableDateRef: useRef(),
     propertyTypeRef: useRef(),
-    subCategoryRefs: useRef(),
+    subCategoryRef: useRef(),
     descriptionRef: useRef(),
   };
 
@@ -104,7 +104,7 @@ const EditYourProperty = () => {
 
   function submitData(e) {
     e.preventDefault();
-    // console.log("Submit Data");
+    console.log("Sub Category", subCategory);
     const formData = new FormData();
     formData.append("name", inputRefs.nameRef.current.value);
     formData.append("email", inputRefs.emailRef.current.value);
@@ -131,7 +131,10 @@ const EditYourProperty = () => {
     formData.append("tenantType", inputRefs.tenantTypeRef.current.value);
     formData.append("availableDate", inputRefs.availableDateRef.current.value);
     formData.append("propertyType", inputRefs.propertyTypeRef.current.value);
-    formData.append("subCategory", inputRefs.subCategoryRefs.current.value);
+    formData.append(
+      "subCategory",
+      subCategory === "" ? data.subCategory : subCategory
+    );
     formData.append("description", inputRefs.descriptionRef.current.value);
     console.log("Form Data:", formData);
     if (window.confirm("Are you sure?")) {
@@ -176,7 +179,6 @@ const EditYourProperty = () => {
     }
   }
   return (
-    
     <Wrapper>
       <section style={{ marginTop: 80 }}>
         {/* Heading */}
@@ -279,7 +281,7 @@ const EditYourProperty = () => {
                   height: "100vh",
                 }}
               >
-                <h4 className="m-2 text-center">Edit Property{data.furnishing}</h4>
+                <h4 className="m-2 text-center">Edit Property</h4>
                 <form
                   className="w-100 d-sm-flex flex-row flex-wrap justify-content-start align-items-start py-3"
                   onSubmit={submitData}
@@ -334,7 +336,7 @@ const EditYourProperty = () => {
                         }}
                       >
                         <img
-                          src={`/images/${path}`}
+                          src={`/images/property-img/${path}`}
                           alt={`Flat Img-${i + 1}`}
                           style={{ width: "100%", height: "100%" }}
                         />
@@ -852,16 +854,17 @@ const EditYourProperty = () => {
                                 key={index}
                                 className="form-control"
                                 id={`exampleFormControlSelect${index + 1}`}
-                                ref={inputRefs.subCategoryRefs}
+                                defaultValue={data.subCategory}
                                 style={{
                                   display: display[categoryMap[category]],
                                 }}
+                                onChange={(e) => setSubCategory(e.target.value)}
                               >
-                                <option value="type" disabled selected>
-                                  Room Type
-                                </option>
                                 {category === "room" && (
                                   <>
+                                    <option value="type" disabled selected>
+                                      Room Type
+                                    </option>
                                     <option
                                       value="1rk"
                                       selected={data.subCategory === "1rk"}
@@ -902,6 +905,9 @@ const EditYourProperty = () => {
                                 )}
                                 {category === "flat" && (
                                   <>
+                                    <option value="type" disabled selected>
+                                      Flat Type
+                                    </option>
                                     <option
                                       value="1rk"
                                       selected={data.subCategory === "1rk"}
@@ -942,6 +948,9 @@ const EditYourProperty = () => {
                                 )}
                                 {category === "pg" && (
                                   <>
+                                    <option value="type" disabled selected>
+                                      PG Type
+                                    </option>
                                     <option
                                       value="single bed"
                                       selected={
@@ -978,6 +987,9 @@ const EditYourProperty = () => {
                                 )}
                                 {category === "hostel" && (
                                   <>
+                                    <option value="type" disabled selected>
+                                      Hostel Type
+                                    </option>
                                     <option
                                       value="single bed"
                                       selected={

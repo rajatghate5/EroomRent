@@ -52,17 +52,22 @@ app.get("/tenantsignup/:id", async (req, res) => {
 // 3. Set User Data
 app.post("/tenantsignup", async (req, res) => {
   const { name, email, password, mobno, address } = req.body;
-  const result = await collection1.insertOne({
-    name,
-    email,
-    password,
-    mobno,
-    address,
-  });
-  if (result != null) {
-    res.send({ status: "1", msg: "user signup success" });
+  const matchData = await collection1.findOne({ email });
+  if (matchData === null) {
+    const result = await collection1.insertOne({
+      name,
+      email,
+      password,
+      mobno,
+      address,
+    });
+    if (result != null) {
+      res.send({ status: "1", msg: "user signup success" });
+    } else {
+      res.send({ msg: "signup failed" });
+    }
   } else {
-    res.send({ msg: "signup failed" });
+    res.send({ status: "0", msg: "User Already Exist" });
   }
 });
 
@@ -124,18 +129,23 @@ app.get("/brokersignup/:id", async (req, res) => {
 // 3.Set Broker Data
 app.post("/brokersignup", async (req, res) => {
   const { name, email, password, mobno, address } = req.body;
-  const result = await collection2.insertOne({
-    name,
-    email,
-    password,
-    mobno,
-    address,
-  });
+  const matchData = await collection2.findOne({ email });
+  if (matchData === null) {
+    const result = await collection2.insertOne({
+      name,
+      email,
+      password,
+      mobno,
+      address,
+    });
 
-  if (result != null) {
-    res.send({ status: "1", msg: "broker signup success" });
+    if (result != null) {
+      res.send({ status: "1", msg: "broker signup success" });
+    } else {
+      res.send({ msg: "signup failed" });
+    }
   } else {
-    res.send({ msg: "signup failed" });
+    res.send({ status: "0", msg: "User Already Exist" });
   }
 });
 
@@ -197,17 +207,22 @@ app.get("/ownersignup/:id", async (req, res) => {
 // 3. Set Owner Data
 app.post("/ownersignup", async (req, res) => {
   const { name, email, password, mobno, address } = req.body;
-  const result = await collection3.insertOne({
-    name,
-    email,
-    password,
-    mobno,
-    address,
-  });
-  if (result != null) {
-    res.send({ status: "1", msg: "owner signup success" });
+  const matchData = await collection3.findOne({ email });
+  if (matchData === null) {
+    const result = await collection3.insertOne({
+      name,
+      email,
+      password,
+      mobno,
+      address,
+    });
+    if (result != null) {
+      res.send({ status: "1", msg: "owner signup success" });
+    } else {
+      res.send({ msg: "signup failed" });
+    }
   } else {
-    res.send({ msg: "signup failed" });
+    res.send({ status: "0", msg: "User Already Exist" });
   }
 });
 
@@ -529,6 +544,9 @@ app.get("/postedproperty/:id", async (req, res) => {
   }
 });
 
+// Post Your Property End ------------------------------------------------------------------
+
+// Booking of the property Start -------------------------------------------------------------
 app.get("/booking", async (req, res) => {
   let result = await collection5.find({}).toArray();
   res.send(result);
@@ -568,4 +586,4 @@ app.post("/booking", async (req, res) => {
   }
 });
 
-// Post Your Property End ------------------------------------------------------------------
+// Booking of the property End ---------------------------------------------------------------

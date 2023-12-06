@@ -143,7 +143,7 @@ const ViewProperty = () => {
                         className={`carousel-item ${i === 0 ? "active" : ""}`}
                       >
                         <img
-                          src={`/images/${url}`}
+                          src={`/images/property-img/${url}`}
                           alt={`Flat Img-${i + 1}`}
                           width="100%"
                           height={500}

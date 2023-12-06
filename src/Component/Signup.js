@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-// import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  const [baseurl, setBaseurl] = useState("");
-  const [opt, setOpt] = useState("");
+  const opt = useRef();
   const [reg, setReg] = useState({
     name: "",
     email: "",
@@ -19,37 +17,86 @@ const Signup = () => {
 
   const setData = (e) => {
     e.preventDefault();
-    console.log(opt);
-    if (opt === "broker") {
-      setBaseurl("http://127.0.0.1:5000/brokersignup");
-    } else if (opt === "owner") {
-      setBaseurl("http://127.0.0.1:5000/ownersignup");
-    } else if (opt === "tenant") {
-      setBaseurl("http://127.0.0.1:5000/tenantsignup");
-    } else {
-      setFlag(true);
-      setMsg1("SignUp Failed");
-      return;
+    console.log(opt.current.value);
+    switch (opt.current.value) {
+      case "broker":
+        axios
+          .post("http://127.0.0.1:5000/brokersignup", {
+            name: reg.name,
+            email: reg.email,
+            password: reg.password,
+            mobno: reg.mobno,
+            address: reg.address,
+          })
+          .then((res) => {
+            console.log(res.data);
+            if (res.data.status === "1") {
+              window.location.href = "/login";
+              console.log(res.data.msg);
+            } else if (res.data.status === "0") {
+              setFlag(true);
+              setMsg1("User Already exist");
+            } else {
+              setFlag(true);
+              setMsg1("SignUp Failed");
+            }
+          })
+          .catch((err) => console.log(err));
+        break;
+      case "owner":
+        axios
+          .post("http://127.0.0.1:5000/ownersignup", {
+            name: reg.name,
+            email: reg.email,
+            password: reg.password,
+            mobno: reg.mobno,
+            address: reg.address,
+          })
+          .then((res) => {
+            console.log(res.data);
+            if (res.data.status === "1") {
+              window.location.href = "/login";
+              console.log(res.data.msg);
+            } else if (res.data.status === "0") {
+              setFlag(true);
+              setMsg1("User Already exist");
+            } else {
+              setFlag(true);
+              setMsg1("SignUp Failed");
+            }
+          })
+          .catch((err) => console.log(err));
+        break;
+      case "tenant":
+        axios
+          .post("http://127.0.0.1:5000/tenantsignup", {
+            name: reg.name,
+            email: reg.email,
+            password: reg.password,
+            mobno: reg.mobno,
+            address: reg.address,
+          })
+          .then((res) => {
+            console.log(res.data);
+            if (res.data.status === "1") {
+              window.location.href = "/login";
+              console.log(res.data.msg);
+            } else if (res.data.status === "0") {
+              setFlag(true);
+              console.log(res.data.msg);
+              setMsg1(res.data.msg);
+            } else {
+              setFlag(true);
+              setMsg1("SignUp Failed");
+            }
+          })
+          .catch((err) => console.log(err));
+        break;
+      default:
+        setFlag(true);
+        setMsg1("SignUp Failed");
+        return;
     }
-    axios
-      .post(baseurl, {
-        name: reg.name,
-        email: reg.email,
-        password: reg.password,
-        mobno: reg.mobno,
-        address: reg.address,
-      })
-      .then((res) => {
-        console.log(res.data);
-        if (res.data.status === "1") {
-          window.location.href = "/login";
-          console.log(res.data.msg);
-        } else {
-          setFlag(true);
-          setMsg1("SignUp Failed");
-        }
-      })
-      .catch((err) => console.log(err));
   };
 
   return (
@@ -104,11 +151,7 @@ const Signup = () => {
         </div>
         <div className="col-sm-6 py-4 text-center d-flex justify-content-center align-items-center flex-column">
           <h3 className="my-1">Sign Up</h3>
-          <select
-            className="form-control my-4 w-75"
-            id="rollselect"
-            onChange={(e) => setOpt(e.target.value)}
-          >
+          <select className="form-control my-4 w-75" id="rollselect" ref={opt}>
             <option selected disabled defaultValue="roll">
               Select Roll--
             </option>
@@ -134,6 +177,7 @@ const Signup = () => {
                   className="form-control"
                   id="inputName"
                   placeholder="Enter Full Name"
+                  required
                   onChange={(e) => setReg({ ...reg, name: e.target.value })}
                 />
               </div>
@@ -145,6 +189,7 @@ const Signup = () => {
                   className="form-control"
                   id="inputEmail"
                   placeholder="Enter Email"
+                  required
                   onChange={(e) => setReg({ ...reg, email: e.target.value })}
                 />
               </div>
@@ -157,16 +202,20 @@ const Signup = () => {
                   id="inputPassword"
                   placeholder="Enter Password"
                   onChange={(e) => setReg({ ...reg, password: e.target.value })}
+                  required
                 />
               </div>
             </div>
             <div className="form-group row w-100">
               <div className="col-sm-12 px-0">
                 <input
-                  type="text"
+                  type="number"
                   className="form-control"
                   id="inputNumber"
+                  min={10}
+                  // max={10}
                   placeholder="Enter Mobile Number"
+                  required
                   onChange={(e) => setReg({ ...reg, mobno: e.target.value })}
                 />
               </div>

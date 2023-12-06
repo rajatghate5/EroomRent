@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -9,6 +9,9 @@ const Home = () => {
   const [userInput, setUserInput] = useState("");
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [propertyData, setPropertyData] = useState("");
+  const [subPropertyData, setSubPropertyData] = useState("");
+  const location = useRef();
   const tenantLoggedIn = useSelector(
     (state) => state.detailReducer.tenantLoggedIn
   );
@@ -28,7 +31,6 @@ const Home = () => {
   const handleInputChange = (e) => {
     const input = e.target.value;
     setUserInput(input);
-
     if (input) {
       const filtered = suggestions.filter((data) =>
         data.toLowerCase().startsWith(input.toLowerCase())
@@ -44,6 +46,33 @@ const Home = () => {
     setUserInput(selectedValue);
     setShowSuggestions(false);
   };
+
+  const [display, setDisplay] = useState({
+    disRoom: "block",
+    disFlat: "none",
+    disPg: "none",
+    disHostel: "none",
+  });
+
+  const categoryMap = {
+    room: "disRoom",
+    flat: "disFlat",
+    pg: "disPg",
+    hostel: "disHostel",
+  };
+
+  const radioCheck = (e) => {
+    const category = e.target.defaultValue;
+    setPropertyData(e.target.defaultValue);
+    const newState = Object.fromEntries(
+      Object.entries(display).map(([key, value]) => [
+        key,
+        key === categoryMap[category] ? "block" : "none",
+      ])
+    );
+    setDisplay(newState);
+  };
+
   return (
     <Wrapper>
       <section>
@@ -120,6 +149,7 @@ const Home = () => {
                                   }}
                                   value={userInput}
                                   onChange={handleInputChange}
+                                  ref={location}
                                 />
                                 <div className="input-group-append">
                                   <Link
@@ -131,6 +161,11 @@ const Home = () => {
                                     className="btn btn-gold text-light font-weight-bold d-flex justify-content-center align-items-center"
                                     type="button"
                                     id="button-addon2"
+                                    state={{
+                                      propertyData,
+                                      subPropertyData,
+                                      customLocation: location.current?.value,
+                                    }}
                                   >
                                     <i
                                       className="fas fa-search px-1"
@@ -160,190 +195,155 @@ const Home = () => {
                             </div>
                           </div>
 
-                          {/* <!-- Radio Buttons & Dropdown --> */}
-                          <div className="row border mx-0 border">
-                            <div className="col-sm-12">
-                              <form className="py-3 text-left">
-                                {/* <!-- Checkbox --> */}
-                                <div className="custom-control custom-radio custom-control-inline ">
-                                  <input
-                                    type="radio"
-                                    className="custom-control-input"
-                                    id="customRadio"
-                                    name="example"
-                                    value="customEx"
-                                  />
+                          {/* <!-- Radio Buttons & Dropdown Rent --> */}
+                          <div className="d-flex justify-content-start align-items-center border py-4">
+                            <div
+                              className="d-flex flex-wrap justify-content-around align-items-center w-50"
+                              onInput={(e) => radioCheck(e)}
+                            >
+                              <div className="custom-control custom-radio">
+                                <input
+                                  type="radio"
+                                  className="custom-control-input"
+                                  id="room"
+                                  name="property-rent-category"
+                                  defaultValue="room"
+                                />
+                                <label
+                                  className="custom-control-label"
+                                  htmlFor="room"
+                                >
+                                  Room
+                                </label>
+                              </div>
+                              <div className="custom-control custom-radio">
+                                <input
+                                  type="radio"
+                                  className="custom-control-input"
+                                  id="flat"
+                                  name="property-rent-category"
+                                  defaultValue="flat"
+                                />
+                                <label
+                                  className="custom-control-label"
+                                  htmlFor="flat"
+                                >
+                                  Flat
+                                </label>
+                              </div>
+                              <div className="custom-control custom-radio">
+                                <input
+                                  type="radio"
+                                  className="custom-control-input"
+                                  id="pg"
+                                  name="property-rent-category"
+                                  defaultValue="pg"
+                                />
+                                <label
+                                  className="custom-control-label"
+                                  htmlFor="pg"
+                                >
+                                  PG
+                                </label>
+                              </div>
+                              <div className="custom-control custom-radio">
+                                <input
+                                  type="radio"
+                                  className="custom-control-input"
+                                  id="hostel"
+                                  name="property-rent-category"
+                                  defaultValue="hostel"
+                                />
+                                <label
+                                  className="custom-control-label"
+                                  htmlFor="hostel"
+                                >
+                                  Hostel
+                                </label>
+                              </div>
+                            </div>
+                            <div className="w-25">
+                              {["room", "flat", "pg", "hostel"].map(
+                                (category, index) => (
+                                  <select
+                                    key={index}
+                                    className="form-control"
+                                    id={`exampleFormControlSelect${index + 1}`}
+                                    style={{
+                                      display: display[categoryMap[category]],
+                                    }}
+                                    onChange={(e) =>
+                                      setSubPropertyData(e.target.value)
+                                    }
+                                  >
+                                    {category === "room" && (
+                                      <>
+                                        <option value="type" disabled selected>
+                                          Room Type
+                                        </option>
+                                        <option value="1rk">1 RK</option>
+                                        <option value="1bhk">1 BHK</option>
+                                        <option value="2bhk">2 BHK</option>
+                                        <option value="3bhk">3 BHK</option>
+                                        <option value="4bhk">4 BHK</option>
+                                        <option value="4+bhk">4+ BHK</option>
+                                      </>
+                                    )}
 
-                                  <label
-                                    className="custom-control-label"
-                                    htmlFor="customRadio"
-                                  >
-                                    Room
-                                  </label>
-                                </div>
-
-                                <div className="custom-control custom-radio custom-control-inline ">
-                                  <input
-                                    type="radio"
-                                    className="custom-control-input"
-                                    id="customRadio1"
-                                    name="example"
-                                    value="customEx"
-                                  />
-                                  <label
-                                    className="custom-control-label"
-                                    htmlFor="customRadio1"
-                                  >
-                                    Flat
-                                  </label>
-                                </div>
-                                <div className="custom-control custom-radio custom-control-inline">
-                                  <input
-                                    type="radio"
-                                    className="custom-control-input"
-                                    id="customRadio2"
-                                    name="example"
-                                    value="customEx"
-                                  />
-                                  <label
-                                    className="custom-control-label"
-                                    htmlFor="customRadio2"
-                                  >
-                                    Hostel
-                                  </label>
-                                </div>
-
-                                <div className="custom-control custom-radio custom-control-inline ">
-                                  <input
-                                    type="radio"
-                                    className="custom-control-input"
-                                    id="customRadio4"
-                                    name="example"
-                                    value="customEx"
-                                  />
-                                  <label
-                                    className="custom-control-label"
-                                    htmlFor="customRadio4"
-                                  >
-                                    PG
-                                  </label>
-                                </div>
-
-                                {/* <!-- BHK type --> */}
-                                <div className="btn-group border">
-                                  <button
-                                    type="button"
-                                    className="btn btn-light dropdown-toggle py-2"
-                                    data-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
-                                  >
-                                    <small className="font-weight-bold text-secondary">
-                                      BHK Type
-                                    </small>
-                                  </button>
-                                  <div className="dropdown-menu dropdown-menu-right px-2">
-                                    <div className="custom-control custom-checkbox dropdown-item">
-                                      <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="customCheck"
-                                        name="example1"
-                                      />
-                                      <label
-                                        className="custom-control-label"
-                                        htmlFor="customCheck"
-                                      >
-                                        1RK
-                                      </label>
-                                    </div>
-                                    <div className="custom-control custom-checkbox dropdown-item">
-                                      <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="customCheck"
-                                        name="example1"
-                                      />
-                                      <label
-                                        className="custom-control-label"
-                                        htmlFor="customCheck"
-                                      >
-                                        1BHK
-                                      </label>
-                                    </div>
-                                    <div className="custom-control custom-checkbox dropdown-item">
-                                      <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="customCheck"
-                                        name="example1"
-                                      />
-                                      <label
-                                        className="custom-control-label"
-                                        htmlFor="customCheck"
-                                      >
-                                        2BHK
-                                      </label>
-                                    </div>
-                                    <div className="custom-control custom-checkbox dropdown-item">
-                                      <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="customCheck"
-                                        name="example1"
-                                      />
-                                      <label
-                                        className="custom-control-label"
-                                        htmlFor="customCheck"
-                                      >
-                                        3BHK
-                                      </label>
-                                    </div>
-                                    <div className="custom-control custom-checkbox dropdown-item">
-                                      <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="customCheck"
-                                        name="example1"
-                                      />
-                                      <label
-                                        className="custom-control-label"
-                                        htmlFor="customCheck"
-                                      >
-                                        3+BHK
-                                      </label>
-                                    </div>
-                                  </div>
-                                </div>
-
-                                {/* <!-- Availability --> */}
-                                <div className="btn-group border">
-                                  <button
-                                    type="button"
-                                    className="btn btn-light dropdown-toggle py-2"
-                                    data-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
-                                  >
-                                    <small className="font-weight-bold text-secondary">
-                                      Availability
-                                    </small>
-                                  </button>
-                                  <div className="dropdown-menu dropdown-menu-right">
-                                    <small className="btn">Immediate</small>
-                                    <br />
-                                    <small className="btn">
-                                      Within 15 Days
-                                    </small>
-                                    <br />
-                                    <small className="btn">
-                                      Within 30 Days
-                                    </small>
-                                    <br />
-                                    <small className="btn">After 30 Days</small>
-                                  </div>
-                                </div>
-                              </form>
+                                    {category === "flat" && (
+                                      <>
+                                        <option value="type" disabled selected>
+                                          Flat Type
+                                        </option>
+                                        <option value="1rk">1 RK</option>
+                                        <option value="1bhk">1 BHK</option>
+                                        <option value="2bhk">2 BHK</option>
+                                        <option value="3bhk">3 BHK</option>
+                                        <option value="4bhk">4 BHK</option>
+                                        <option value="4+bhk">4+ BHK</option>
+                                      </>
+                                    )}
+                                    {category === "pg" && (
+                                      <>
+                                        <option value="type" disabled selected>
+                                          PG Type
+                                        </option>
+                                        <option value="single bed">
+                                          Single Bed
+                                        </option>
+                                        <option value="double sharing">
+                                          Double Sharing
+                                        </option>
+                                        <option value="triple sharing">
+                                          Triple Sharing
+                                        </option>
+                                        <option value="four sharing">
+                                          Four Sharing
+                                        </option>
+                                      </>
+                                    )}
+                                    {category === "hostel" && (
+                                      <>
+                                        <option value="type" disabled selected>
+                                          Hostel Type
+                                        </option>
+                                        <option value="single bed">
+                                          Single Bed
+                                        </option>
+                                        <option value="double sharing">
+                                          Double Sharing
+                                        </option>
+                                        <option value="triple sharing">
+                                          Triple Sharing
+                                        </option>
+                                        <option value="four sharing">
+                                          Four Sharing
+                                        </option>
+                                      </>
+                                    )}
+                                  </select>
+                                )
+                              )}
                             </div>
                           </div>
                         </div>
@@ -408,138 +408,121 @@ const Home = () => {
                             </div>
                           </div>
 
-                          {/* <!-- Radio Buttons & Dropdown --> */}
+                          {/* <!-- Radio Buttons & Dropdown Commercial --> */}
                           <div className="row border mx-0 border">
                             <div className="col-sm-12">
                               <form className="py-3 text-left d-sm-flex justify-content-start align-items-center">
                                 {/* <!-- Radio Button --> */}
-                                <div className="custom-control custom-radio">
-                                  <input
-                                    type="radio"
-                                    className="custom-control-input"
-                                    id="customRadio5"
-                                    name="example1"
-                                    value="customEx"
-                                  />
-                                  <label
-                                    className="custom-control-label"
-                                    htmlFor="customRadio5"
-                                  >
-                                    Rent
-                                  </label>
-                                </div>
-                                {/* <!-- Property type --> */}
-                                <div className="btn-group border ml-3">
-                                  <button
-                                    type="button"
-                                    className="btn btn-light dropdown-toggle py-2"
-                                    data-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
-                                  >
-                                    <small className="font-weight-bold text-secondary">
-                                      Property Type
-                                    </small>
-                                  </button>
-                                  <div className="dropdown-menu dropdown-menu-right px-2">
-                                    <div className="custom-control custom-checkbox dropdown-item">
-                                      <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="customCheck"
-                                        name="example1"
-                                      />
-                                      <label
-                                        className="custom-control-label"
-                                        htmlFor="customCheck"
-                                      >
-                                        Office Space
-                                      </label>
-                                    </div>
-                                    <div className="custom-control custom-checkbox dropdown-item">
-                                      <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="customCheck"
-                                        name="example1"
-                                      />
-                                      <label
-                                        className="custom-control-label"
-                                        htmlFor="customCheck"
-                                      >
-                                        Restaurant & Cafe
-                                      </label>
-                                    </div>
-                                    <div className="custom-control custom-checkbox dropdown-item">
-                                      <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="customCheck"
-                                        name="example1"
-                                      />
-                                      <label
-                                        className="custom-control-label"
-                                        htmlFor="customCheck"
-                                      >
-                                        Shop
-                                      </label>
-                                    </div>
-                                    <div className="custom-control custom-checkbox dropdown-item">
-                                      <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="customCheck"
-                                        name="example1"
-                                      />
-                                      <label
-                                        className="custom-control-label"
-                                        htmlFor="customCheck"
-                                      >
-                                        Showroom
-                                      </label>
-                                    </div>
-                                    <div className="custom-control custom-checkbox dropdown-item">
-                                      <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="customCheck"
-                                        name="example1"
-                                      />
-                                      <label
-                                        className="custom-control-label"
-                                        htmlFor="customCheck"
-                                      >
-                                        Industrial Building
-                                      </label>
-                                    </div>
-                                    <div className="custom-control custom-checkbox dropdown-item">
-                                      <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="customCheck"
-                                        name="example1"
-                                      />
-                                      <label
-                                        className="custom-control-label"
-                                        htmlFor="customCheck"
-                                      >
-                                        Godown/Warehouse
-                                      </label>
-                                    </div>
-                                    <div className="custom-control custom-checkbox dropdown-item">
-                                      <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="customCheck"
-                                        name="example1"
-                                      />
-                                      <label
-                                        className="custom-control-label"
-                                        htmlFor="customCheck"
-                                      >
-                                        Other Businesses
-                                      </label>
-                                    </div>
+
+                                {/* <!-- Property type Commercial --> */}
+                                <div
+                                  className="d-flex flex-wrap justify-content-start align-items-center"
+                                  style={{ gap: "0.5rem" }}
+                                >
+                                  <div className="custom-control d-inline custom-radio">
+                                    <input
+                                      type="radio"
+                                      className="custom-control-input"
+                                      id="office"
+                                      name="property-commercial-category"
+                                      defaultValue="office"
+                                    />
+                                    <label
+                                      className="custom-control-label"
+                                      htmlFor="office"
+                                    >
+                                      Office
+                                    </label>
+                                  </div>
+                                  <div className="custom-control d-inline custom-radio">
+                                    <input
+                                      type="radio"
+                                      className="custom-control-input"
+                                      id="rest&cafe"
+                                      name="property-commercial-category"
+                                      defaultValue="rest&cafe"
+                                    />
+                                    <label
+                                      className="custom-control-label"
+                                      htmlFor="rest&cafe"
+                                    >
+                                      Restaurant and Cafe
+                                    </label>
+                                  </div>
+                                  <div className="custom-control d-inline custom-radio">
+                                    <input
+                                      type="radio"
+                                      className="custom-control-input"
+                                      id="shop"
+                                      name="property-commercial-category"
+                                      defaultValue="shop"
+                                    />
+                                    <label
+                                      className="custom-control-label"
+                                      htmlFor="shop"
+                                    >
+                                      Shop
+                                    </label>
+                                  </div>
+                                  <div className="custom-control d-inline custom-radio">
+                                    <input
+                                      type="radio"
+                                      className="custom-control-input"
+                                      id="showroom"
+                                      name="property-commercial-category"
+                                      defaultValue="showroom"
+                                    />
+                                    <label
+                                      className="custom-control-label"
+                                      htmlFor="showroom"
+                                    >
+                                      Showroom
+                                    </label>
+                                  </div>
+                                  <div className="custom-control d-inline custom-radio">
+                                    <input
+                                      type="radio"
+                                      className="custom-control-input"
+                                      id="industrial"
+                                      name="property-commercial-category"
+                                      defaultValue="industrial"
+                                    />
+                                    <label
+                                      className="custom-control-label"
+                                      htmlFor="industrial"
+                                    >
+                                      Industrial
+                                    </label>
+                                  </div>
+                                  <div className="custom-control d-inline custom-radio">
+                                    <input
+                                      type="radio"
+                                      className="custom-control-input"
+                                      id="god/var"
+                                      name="property-commercial-category"
+                                      defaultValue="god/var"
+                                    />
+                                    <label
+                                      className="custom-control-label"
+                                      htmlFor="god/var"
+                                    >
+                                      Godown &amp; Warehouse
+                                    </label>
+                                  </div>
+                                  <div className="custom-control d-inline custom-radio">
+                                    <input
+                                      type="radio"
+                                      className="custom-control-input"
+                                      id="other"
+                                      name="property-commercial-category"
+                                      defaultValue="other"
+                                    />
+                                    <label
+                                      className="custom-control-label"
+                                      htmlFor="other"
+                                    >
+                                      Other Buss.
+                                    </label>
                                   </div>
                                 </div>
                               </form>

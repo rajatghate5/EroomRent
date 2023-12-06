@@ -34,13 +34,7 @@ const OwnerPlans = () => {
                     People like you!
                   </span>
                 </div>
-              </div>
-              <Link
-                to="/tenantplans"
-                className="btn btn-outline-success fow-600 mt-3 fos-18"
-              >
-                Click here for Tenant Plans
-              </Link>
+              </div>              
             </div>
             {/* <!-- Plan Cards --> */}
             <div className="row my-5">

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { brokerLogin, getDetails, ownerLogin, tenantLogin } from "../actions";
 
 const Login = () => {
-  const [opt, setOpt] = useState("");
+  const opt = useRef();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const data = useLocation().state;
@@ -31,7 +31,7 @@ const Login = () => {
 
   const logData = (e) => {
     e.preventDefault();
-    switch (opt) {
+    switch (opt.current.value) {
       case "broker":
         axios
           .post("http://127.0.0.1:5000/brokerlogin", {
@@ -83,6 +83,8 @@ const Login = () => {
               dispatch(getDetails(res.data.id));
               dispatch(tenantLogin());
               navigateWithData("/tenant");
+            } else if (res.data.status === "0") {
+              alert("User Already exist");
             } else {
               setFlag1(true);
               setMsg2("Login Not Success");
@@ -154,17 +156,13 @@ const Login = () => {
         </div>
         <div className="col-sm-6 d-flex justify-content-center align-items-center flex-column py-4 text-center">
           <h3 className="my-3">Login</h3>
-          <select
-            className="form-control w-75 my-5"
-            id="roll-select"
-            onChange={(e) => setOpt(e.target.value)}
-          >
+          <select className="form-control w-75 my-5" id="roll-select" ref={opt}>
             <option defaultValue="roll" disabled selected>
               Select Roll--
             </option>
             <option value="owner">Owner</option>
             <option value="broker">Broker</option>
-            <option value="tenant" selected={flag}>
+            <option value="tenant" selected={flag === true}>
               Tenant
             </option>
           </select>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -11,6 +11,8 @@ const Searched = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const searchData = useLocation().state;
+  const { customLocation, propertyData, subPropertyData } = searchData;
   const tenantLoggedIn = useSelector(
     (state) => state.detailReducer.tenantLoggedIn
   );
@@ -32,8 +34,14 @@ const Searched = () => {
     axios
       .get("http://127.0.0.1:5000/property")
       .then((res) => {
-        console.log(res.data);
-        setData(res.data);
+        const filteredData = res.data.filter((item) => {
+          const matchLocation = item.location === customLocation;
+          const matchPropertyType = item.propertyType === propertyData;
+          const matchSubCategory = item.subCategory === subPropertyData;
+
+          return matchLocation && matchPropertyType && matchSubCategory;
+        });
+        setData(filteredData);
       })
       .catch((err) => {
         console.error(err);
@@ -42,7 +50,7 @@ const Searched = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [customLocation, propertyData, subPropertyData]);
 
   if (loading) {
     return <LoadingAnimation />;
@@ -50,17 +58,38 @@ const Searched = () => {
 
   if (error) {
     return (
-      <p className="m-5" style={{ paddingTop: "5rem" }}>
-        Error: {error.message}
-      </p>
+      <div className="container-fluid">
+        <div
+          className="row d-flex justify-content-center align-items-center"
+          style={{ height: "85vh" }}
+        >
+          <div className="col-sm-12 d-flex justify-content-center align-items-center">
+            <img
+              src="https://cdni.iconscout.com/illustration/premium/thumb/404-error-3702359-3119148.png"
+              alt="Page Not Found"
+              className="img-fluid"
+            />
+          </div>
+        </div>
+      </div>
     );
   }
 
   if (!data || data.length === 0) {
     return (
-      <p className="m-5" style={{ paddingTop: "5rem" }}>
-        No data available
-      </p>
+      <div className="container-fluid">
+        <div
+          className="row d-flex justify-content-center align-items-center"
+          style={{ height: "85vh" }}
+        >
+          <div className="col-sm-6 d-flex justify-content-center align-items-center">
+            <img
+              src="https://michassi.com/assets/web//images/no_data_found.png"
+              alt="No Data Found"
+            />
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -68,7 +97,7 @@ const Searched = () => {
     <Wrapper>
       <section className="bg-lightest-grey">
         <div
-          className="row py-2 d-sm-flex justify-content-center align-items-start"
+          className="row py-2 d-sm-flex justify-content-around align-items-start"
           style={{ marginTop: 65, gap: "0.5rem" }}
         >
           {/* Filters Start */}
@@ -260,8 +289,10 @@ const Searched = () => {
                             Family
                           </label>
                         </div>
-                        <div className="custom-control custom-checkbox"
-                        style={{ marginRight: "0.9rem" }}>
+                        <div
+                          className="custom-control custom-checkbox"
+                          style={{ marginRight: "0.9rem" }}
+                        >
                           <input
                             type="checkbox"
                             className="custom-control-input"
@@ -454,6 +485,7 @@ const Searched = () => {
               </div>
             </div>
           </div>
+
           {/* Filters End */}
           {/* Room Options Cards Start */}
           <div className="col-sm-8 bg-lightest-grey">
@@ -466,8 +498,12 @@ const Searched = () => {
                         Home
                       </Link>
                     </li>
-                    <li className="breadcrumb-item active" aria-current="page">
-                      Vijay Nagar
+                    <li
+                      className="breadcrumb-item active"
+                      aria-current="page"
+                      style={{ marginTop: "0.1rem" }}
+                    >
+                      <span className="text-capitalize">{customLocation}</span>
                     </li>
                   </ol>
                 </nav>
@@ -549,7 +585,7 @@ const Searched = () => {
                                     }`}
                                   >
                                     <img
-                                      src={`/images/${url}`}
+                                      src={`/images/property-img/${url}`}
                                       alt={`Flat Img-${i + 1}`}
                                       width={150}
                                       height={234}

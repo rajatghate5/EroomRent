@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 const Profile = () => {
   const [data, setData] = useState({});
   const [propertyData, setPropertyData] = useState([]);
+  const [retypePass, setRetypePass] = useState("");
   const navigate = useNavigate();
   const userID = useSelector((state) => state.detailReducer.id);
   const ownerLoggedIn = useSelector(
@@ -16,7 +17,7 @@ const Profile = () => {
 
   const updatedName = useRef();
   const updatedEmail = useRef();
-  // const tpassword = useRef();
+  const updatedPassword = useRef();
   const updatedMobile = useRef();
   const updatedAddress = useRef();
   if (ownerLoggedIn === true) {
@@ -46,7 +47,8 @@ const Profile = () => {
       });
   }, [userID]);
 
-  const saveProfile = () => {
+  const saveProfile = (e) => {
+    e.preventDefault();
     axios
       .patch(baseUrl + userID, {
         name: updatedName.current.value,
@@ -56,12 +58,39 @@ const Profile = () => {
         address: updatedAddress.current.value,
       })
       .then((res) => {
-        alert("Profile Updated!")
+        alert("Profile Updated!");
         console.log("Profile updated successfully", res.data);
       })
       .catch((error) => {
         console.error("Error updating profile:", error);
       });
+  };
+
+  const savePassword = (e) => {
+    e.preventDefault();
+    if (
+      updatedPassword.current.value === retypePass &&
+      updatedPassword.current.value !== "" &&
+      retypePass !== ""
+    ) {
+      axios
+        .patch(baseUrl + userID, {
+          name: updatedName.current.value,
+          email: updatedEmail.current.value,
+          password: updatedPassword.current.value,
+          mobno: updatedMobile.current.value,
+          address: updatedAddress.current.value,
+        })
+        .then((res) => {
+          alert("Password Updated!");
+          console.log("Password updated successfully");
+        })
+        .catch((error) => {
+          console.error("Error updating profile:", error);
+        });
+    } else {
+      alert("Retype Password and New Password does not matched");
+    }
   };
 
   return (
@@ -137,141 +166,222 @@ const Profile = () => {
               <div className="col-sm-9 border border-muted">
                 <div className="tab-content" id="v-pills-tabContent">
                   <div
-                    className="tab-pane fade show active p-3"
+                    className="tab-pane fade show active p-2"
                     id="basicprofile"
                     role="tabpanel"
                     aria-labelledby="v-pills-basicprofile-tab"
                   >
-                    <p className="border-bottom border-muted pb-3 pt-2 fow-600 fos-14">
-                      Edit Your Profile
-                    </p>
-                    <div className="d-flex flex-column">
-                      <div className="row">
-                        <div className="col-sm-6">
-                          <form onSubmit={saveProfile}>
-                            <div className="d-flex justify-content-between align-items-center">
-                              <label
-                                htmlFor="fname"
-                                className="fos-14 fow-600 my-auto"
-                              >
-                                Name
-                              </label>
-                              <input
-                                type="text"
-                                name="fname"
-                                defaultValue={data.name}
-                                className="border border-muted pl-2 w-75 fos-14"
-                                style={{ height: 35 }}
-                                ref={updatedName}
-                              />
-                            </div>
-                            <div className="d-flex justify-content-between align-items-center mt-4">
-                              <label
-                                htmlFor="emailid"
-                                className="fos-14 fow-600 my-auto w-25"
-                              >
-                                Email
-                              </label>
-                              <input
-                                type="email"
-                                name="emailid"
-                                defaultValue={data.email}
-                                className="border border-muted pl-2 w-75 fos-14"
-                                style={{ height: 35, marginLeft: 11 }}
-                                ref={updatedEmail}
-                              />
-                              <div
-                                className="bg-lightest-grey border border-muted"
-                                style={{ height: 35 }}
-                              >
-                                <i className="fas fa-exclamation-triangle text-danger fos-20 m-2"></i>
-                              </div>
-                            </div>
-                            <div className="d-flex justify-content-between align-items-center mt-4">
-                              <label
-                                htmlFor="phone"
-                                className="fos-14 fow-600 my-auto w-25"
-                              >
-                                Mobile
-                              </label>
-                              <input
-                                type="number"
-                                name="phone"
-                                defaultValue={data.mobno}
-                                className="border border-muted pl-2 w-75 fos-14"
-                                style={{ height: 35, marginLeft: 11 }}
-                                ref={updatedMobile}
-                              />
-                              <div
-                                className="py-1 pl-1"
-                                style={{ height: 35, width: 40 }}
-                              >
-                                <i
-                                  className="fas fa-check-circle fos-18"
-                                  style={{ color: " #25ab1c" }}
-                                ></i>
-                              </div>
-                            </div>
-                            <div className="d-flex justify-content-between align-items-center mt-4">
-                              <label
-                                htmlFor="phone"
-                                className="fos-14 fow-600 my-auto w-25"
-                              >
-                                Address
-                              </label>
-                              <input
-                                type="text"
-                                name="address"
-                                defaultValue={data.address}
-                                className="border border-muted pl-2 w-75 fos-14"
-                                style={{ height: 35, marginLeft: 11 }}
-                                ref={updatedAddress}
-                              />
-                              <div
-                                className="py-1 pl-1"
-                                style={{ height: 35, width: 40 }}
-                              >
-                                <i
-                                  className="fas fa-check-circle fos-18"
-                                  style={{ color: " #25ab1c" }}
-                                ></i>
-                              </div>
-                            </div>
-                            <div
-                              className="d-flex my-5"
-                              style={{ marginLeft: "3.5rem" }}
-                            >
-                              <span className="text-dark">
-                                Get updates on{" "}
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  height="1.2em"
-                                  viewBox="0 0 448 512"
+                    <ul className="nav nav-tabs" id="myTab" role="tablist">
+                      <li className="nav-item w-50" role="presentation">
+                        <button
+                          className="nav-link active d-flex justify-content-center align-items-center h-100 w-100 py-3"
+                          id="personal-tab"
+                          data-toggle="tab"
+                          data-target="#personal"
+                          type="button"
+                          role="tab"
+                          aria-controls="personal"
+                          aria-selected="true"
+                        >
+                          <span className="ml-2 fos-14">Personal Info</span>
+                        </button>
+                      </li>
+                      <li className="nav-item w-50" role="presentation">
+                        <button
+                          className="nav-link d-flex justify-content-center align-items-center h-100 w-100 py-3"
+                          id="security-tab"
+                          data-toggle="tab"
+                          data-target="#security"
+                          type="button"
+                          role="tab"
+                          aria-controls="security"
+                          aria-selected="false"
+                        >
+                          <span className="ml-2 fos-14">Security</span>
+                        </button>
+                      </li>
+                    </ul>
+                    <div
+                      className="tab-content px-3 py-5 h-100"
+                      id="myTabContent"
+                    >
+                      <div
+                        className="tab-pane fade show active h-100"
+                        id="personal"
+                        role="tabpanel"
+                        aria-labelledby="personal-tab"
+                      >
+                        <div className="d-flex flex-column">
+                          <div className="row w-100 justify-content-center align-items-center">
+                            <div className="col-sm-6">
+                              <form onSubmit={saveProfile}>
+                                <div className="d-flex justify-content-between align-items-center">
+                                  <label
+                                    htmlFor="fname"
+                                    className="fos-14 fow-600 my-auto"
+                                  >
+                                    Name
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="fname"
+                                    defaultValue={data.name}
+                                    className="border border-muted pl-2 w-75 fos-14"
+                                    style={{ height: 35 }}
+                                    ref={updatedName}
+                                  />
+                                </div>
+                                <div className="d-flex justify-content-between align-items-center mt-4">
+                                  <label
+                                    htmlFor="emailid"
+                                    className="fos-14 fow-600 my-auto w-25"
+                                  >
+                                    Email
+                                  </label>
+                                  <input
+                                    type="email"
+                                    name="emailid"
+                                    defaultValue={data.email}
+                                    className="border border-muted pl-2 w-75 fos-14"
+                                    style={{ height: 35, marginLeft: 11 }}
+                                    ref={updatedEmail}
+                                  />
+                                  <div
+                                    className="bg-lightest-grey border border-muted"
+                                    style={{ height: 35 }}
+                                  >
+                                    <i className="fas fa-exclamation-triangle text-danger fos-20 m-2"></i>
+                                  </div>
+                                </div>
+                                <div className="d-flex justify-content-between align-items-center mt-4">
+                                  <label
+                                    htmlFor="phone"
+                                    className="fos-14 fow-600 my-auto w-25"
+                                  >
+                                    Mobile
+                                  </label>
+                                  <input
+                                    type="number"
+                                    name="phone"
+                                    defaultValue={data.mobno}
+                                    className="border border-muted pl-2 w-75 fos-14"
+                                    style={{ height: 35, marginLeft: 11 }}
+                                    ref={updatedMobile}
+                                  />
+                                  <div
+                                    className="py-1 pl-1"
+                                    style={{ height: 35, width: 40 }}
+                                  >
+                                    <i
+                                      className="fas fa-check-circle fos-18"
+                                      style={{ color: " #25ab1c" }}
+                                    ></i>
+                                  </div>
+                                </div>
+                                <div className="d-flex justify-content-between align-items-center mt-4">
+                                  <label
+                                    htmlFor="phone"
+                                    className="fos-14 fow-600 my-auto w-25"
+                                  >
+                                    Address
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="address"
+                                    defaultValue={data.address}
+                                    className="border border-muted pl-2 w-75 fos-14"
+                                    style={{ height: 35, marginLeft: 11 }}
+                                    ref={updatedAddress}
+                                  />
+                                  <div
+                                    className="py-1 pl-1"
+                                    style={{ height: 35, width: 40 }}
+                                  >
+                                    <i
+                                      className="fas fa-check-circle fos-18"
+                                      style={{ color: " #25ab1c" }}
+                                    ></i>
+                                  </div>
+                                </div>
+
+                                <button
+                                  type="submit"
+                                  className="btn btn-gold text-light fow-600 w-100 my-5"
                                 >
-                                  <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z" />
-                                </svg>{" "}
-                                Whatsapp{" "}
-                              </span>
-                              <span className="custom-control custom-switch ml-2">
-                                <input
-                                  type="checkbox"
-                                  className="custom-control-input"
-                                  id="customSwitch1"
-                                  defaultChecked
-                                />
-                                <label
-                                  className="custom-control-label"
-                                  htmlFor="customSwitch1"
-                                />
-                              </span>
+                                  Save Profile
+                                </button>
+                              </form>
                             </div>
-                            <button
-                              type="submit"
-                              className="btn btn-gold text-light fow-600 w-100"
-                            >
-                              Save Profile
-                            </button>
-                          </form>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className="tab-pane fade h-100"
+                        id="security"
+                        role="tabpanel"
+                        aria-labelledby="security-tab"
+                      >
+                        <div className="d-flex flex-column my-5">
+                          <div className="row d-flex justify-content-center align-items-center">
+                            <div className="col-sm-6">
+                              <form onSubmit={savePassword}>
+                                <div className="d-flex justify-content-between align-items-center">
+                                  <label
+                                    htmlFor="cpassword"
+                                    className="fos-14 fow-600 my-auto"
+                                  >
+                                    Current Password
+                                  </label>
+                                  <input
+                                    type="password"
+                                    name="cpassword"
+                                    defaultValue={data.password}
+                                    className="border border-muted pl-2 w-50 fos-14"
+                                    style={{ height: 35 }}
+                                    disabled
+                                  />
+                                </div>
+                                <div className="d-flex justify-content-between align-items-center mt-4">
+                                  <label
+                                    htmlFor="newpassword"
+                                    className="fos-14 fow-600 my-auto"
+                                  >
+                                    New Password
+                                  </label>
+                                  <input
+                                    type="password"
+                                    name="newpassword"
+                                    ref={updatedPassword}
+                                    className="border border-muted pl-2 w-50 fos-14"
+                                    style={{ height: 35, marginLeft: 11 }}
+                                  />
+                                </div>
+                                <div className="d-flex justify-content-between align-items-center mt-4">
+                                  <label
+                                    htmlFor="retypepassword"
+                                    className="fos-14 fow-600 my-auto"
+                                  >
+                                    Retype Password
+                                  </label>
+                                  <input
+                                    type="password"
+                                    name="retypepassword"
+                                    onChange={(e) =>
+                                      setRetypePass(e.target.value)
+                                    }
+                                    className="border border-muted pl-2 w-50 fos-14"
+                                    style={{ height: 35, marginLeft: 11 }}
+                                  />
+                                </div>
+                                <button
+                                  type="submit"
+                                  className="btn btn-gold text-light fow-600 w-100 my-5"
+                                >
+                                  Save Password
+                                </button>
+                              </form>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -317,7 +427,9 @@ const Profile = () => {
                               <div className="my-auto">
                                 <p className="fos-14 my-1">
                                   Property Type :{" "}
-                                  <span className="text-capitalize fow-600">{data.propertyType}</span>
+                                  <span className="text-capitalize fow-600">
+                                    {data.propertyType}
+                                  </span>
                                 </p>
                                 <p className="fos-14 my-1">
                                   Sub Category :{" "}
@@ -326,7 +438,8 @@ const Profile = () => {
                                   </span>
                                 </p>
                                 <p className="fos-14 my-1">
-                                  Rent: <span className="fow-600">₹{data.rent}</span>
+                                  Rent:{" "}
+                                  <span className="fow-600">₹{data.rent}</span>
                                 </p>
                                 <p className="fos-14 my-1">
                                   Location :
@@ -335,8 +448,18 @@ const Profile = () => {
                                   </span>
                                 </p>
                               </div>
-                              <div style={{width : 150, height: 150, objectFit: 'contain'}}>                                
-                                <img src={`/images/${data.imageUrls[0]}`} alt="" style={{width: '100%', height: '100%'}}/>
+                              <div
+                                style={{
+                                  width: 150,
+                                  height: 150,
+                                  objectFit: "contain",
+                                }}
+                              >
+                                <img
+                                  src={`/images/property-img/${data.imageUrls[0]}`}
+                                  alt=""
+                                  style={{ width: "100%", height: "100%" }}
+                                />
                               </div>
                             </div>
                           </div>
