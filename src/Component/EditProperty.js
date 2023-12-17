@@ -28,6 +28,8 @@ const EditYourProperty = () => {
     waterRef: useRef(),
     securityRef: useRef(),
     floorRef: useRef(),
+    addressRef : useRef(),
+    pincodeRef: useRef(),
     locationRef: useRef(),
     tenantTypeRef: useRef(),
     availableDateRef: useRef(),
@@ -65,9 +67,7 @@ const EditYourProperty = () => {
   const ownerLoggedIn = useSelector(
     (state) => state.detailReducer.ownerLoggedIn
   );
-  const brokerLoggedIn = useSelector(
-    (state) => state.detailReducer.brokerLoggedIn
-  );
+ 
   let baseUrl = "";
 
   if (ownerLoggedIn === true) {
@@ -127,6 +127,8 @@ const EditYourProperty = () => {
     formData.append("water", inputRefs.waterRef.current.value);
     formData.append("security", inputRefs.securityRef.current.value);
     formData.append("floor", inputRefs.floorRef.current.value);
+    formData.append("address", inputRefs.addressRef.current.value);
+    formData.append("pincode", inputRefs.pincodeRef.current.value);
     formData.append("location", inputRefs.locationRef.current.value);
     formData.append("tenantType", inputRefs.tenantTypeRef.current.value);
     formData.append("availableDate", inputRefs.availableDateRef.current.value);
@@ -159,14 +161,13 @@ const EditYourProperty = () => {
   }
 
   function deleteProperty(e) {
-    e.preventDefault();
-    // console.log("Delete Property");
+    e.preventDefault();    
     if (window.confirm("Are you sure?")) {
       axios
         .delete("http://127.0.0.1:5000/property/" + propertyID)
         .then((res) => {
           console.log(res.data);
-          if (res.data.status === "ok") {
+          if (res.data.status === "1") {
             alert("Property Deleted");
             if (ownerLoggedIn === true) {
               window.location.href = "/owner/profile";
@@ -178,6 +179,7 @@ const EditYourProperty = () => {
         .catch((err) => console.log(err));
     }
   }
+
   return (
     <Wrapper>
       <section style={{ marginTop: 80 }}>
@@ -630,6 +632,22 @@ const EditYourProperty = () => {
                       ref={inputRefs.floorRef}
                     />
                   </div>
+                  <input
+                    type="text"
+                    className="form-control w-45 w--100 m-2"
+                    id="address"
+                    placeholder="Enter Address"
+                    ref={inputRefs.addressRef}
+                    defaultValue={data.address}
+                  />
+                  <input
+                    type="number"
+                    className="form-control w-45 w--100 m-2"
+                    id="pincode"
+                    placeholder="Enter Pincode"                    
+                    ref={inputRefs.pincodeRef}
+                    defaultValue={data.pincode}
+                  />
                   <div className="form-group w-45 w--100 m-2">
                     <select
                       className="form-control"

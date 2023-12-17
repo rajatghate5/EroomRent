@@ -1,108 +1,49 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { brokerLogin, getDetails, ownerLogin, tenantLogin } from "../actions";
+import { adminLogin, getDetails } from "../actions";
 
-const Login = () => {
-  const opt = useRef();
+const LoginAdmin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const data = useLocation().state;
-  const flag = useLocation().state;
-  console.log("Waiting Data", flag);
 
   const [login, setLogin] = useState({
     email: "",
     password: "",
   });
 
-  console.log(data);
   const [flag1, setFlag1] = useState(false);
   const [msg2, setMsg2] = useState("");
 
   function navigateWithData(path) {
-    if (flag === true) {
-      navigate("/tenant/waiting");
-    } else {
-      navigate(path);
-    }
+    navigate(path);
   }
 
   const logData = (e) => {
     e.preventDefault();
-    switch (opt.current.value) {
-      case "broker":
-        axios
-          .post("http://127.0.0.1:5000/brokerlogin", {
-            email: login.email,
-            password: login.password,
-          })
-          .then((res) => {
-            if (res.data.status === "1") {
-              dispatch(getDetails(res.data.id));
-              dispatch(brokerLogin());
-              navigateWithData("/broker");
-            } else {
-              setFlag1(true);
-              setMsg2("Login Not Success");
-            }
-          })
-          .catch((err) => {
-            console.error("Network Error", err);
-          });
-        break;
-      case "owner":
-        axios
-          .post("http://127.0.0.1:5000/ownerlogin", {
-            email: login.email,
-            password: login.password,
-          })
-          .then((res) => {
-            if (res.data.status === "1") {
-              dispatch(getDetails(res.data.id));
-              dispatch(ownerLogin());
-              navigateWithData("/owner");
-            } else {
-              setFlag1(true);
-              setMsg2("Login Not Success");
-            }
-          })
-          .catch((err) => {
-            console.error("Network Error", err);
-          });
-        break;
-      case "tenant":
-        axios
-          .post("http://127.0.0.1:5000/tenantlogin", {
-            email: login.email,
-            password: login.password,
-          })
-          .then((res) => {
-            if (res.data.status === "1") {
-              dispatch(getDetails(res.data.id));
-              dispatch(tenantLogin());
-              navigateWithData("/tenant");
-            } else if (res.data.status === "0") {
-              alert("User Already exist");
-            } else {
-              setFlag1(true);
-              setMsg2("Login Not Success");
-            }
-          })
-          .catch((err) => {
-            console.error("Network Error", err);
-          });
-        break;
-      default:
-        setFlag1(true);
-        setMsg2("SignUp Failed");
-        return;
-    }
+    axios
+      .post("http://127.0.0.1:5000/adminlogin", {
+        email: login.email,
+        password: login.password,
+      })
+      .then((res) => {
+        if (res.data.status === "1") {
+          dispatch(getDetails(res.data.id));
+          dispatch(adminLogin());
+          navigateWithData("/admin/home");
+        } else {
+          setFlag1(true);
+          setMsg2("Login Not Success");
+        }
+      })
+      .catch((err) => {
+        console.error("Network Error", err);
+      });
   };
 
   return (
-    <>
+    <div id="container">
       <div
         className="row py-2 d-sm-flex justify-content-center align-items-stretch"
         style={{ height: "100vh" }}
@@ -155,18 +96,7 @@ const Login = () => {
           </div>
         </div>
         <div className="col-sm-6 d-flex justify-content-center align-items-center flex-column py-4 text-center">
-          <h3 className="my-3">Login</h3>
-          <select className="form-control w-75 my-5" id="roll-select" ref={opt}>
-            <option defaultValue="roll" disabled selected>
-              Select Roll--
-            </option>
-            <option value="owner">Owner</option>
-            <option value="broker">Broker</option>
-            <option value="tenant" selected={flag === true}>
-              Tenant
-            </option>
-          </select>
-
+          <h3 className="my-3">Login Admin</h3>
           <form
             onSubmit={logData}
             className="d-flex w-75 p-0 justify-content-around align-items-center flex-column"
@@ -199,24 +129,16 @@ const Login = () => {
             </div>
             <button
               type="submit"
-              className="btn btn-gold text-light font-weight-bold w-100"              
+              className="btn btn-gold text-light font-weight-bold w-100"
             >
               Submit
             </button>
-            <div className="d-flex justify-content-between align-items-center w-100 py-3">
-              <p className="mb-0">
-                New User? <Link to="/signup">Create a Account</Link>
-              </p>
-              <Link to="/forgottenpassword">
-                Forgotten Password
-              </Link>
-            </div>
             {flag1 ? <small style={{ color: "red" }}>{msg2}</small> : ""}
           </form>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default Login;
+export default LoginAdmin;

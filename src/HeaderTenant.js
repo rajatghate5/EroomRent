@@ -7,7 +7,8 @@ import { logOut } from "./actions";
 const HeaderTenant = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [data, setData] = useState({});  const userID = useSelector((state) => state.detailReducer.id);
+  const [data, setData] = useState({});  
+  const userID = useSelector((state) => state.detailReducer.id);
   console.log(userID);
   useEffect(() => {
     axios("http://127.0.0.1:5000/tenantsignup/" + userID)
@@ -74,8 +75,8 @@ const HeaderTenant = () => {
                     src="/images/person.svg"
                     alt="Person"
                     className="border rounded-circle"
-                    width="30px"
-                    height="30px"
+                    width={30}
+                    height={30}
                   />
                   <a
                     className="nav-link dropdown-toggle py-0 px-2"

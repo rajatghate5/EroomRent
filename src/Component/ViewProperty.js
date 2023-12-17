@@ -4,6 +4,7 @@ import { useLocation, Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { propertyBook } from "../actions";
+import LoadingAnimation from "./LoadingAnimation";
 
 const ViewProperty = () => {
   const dispatch = useDispatch();
@@ -34,36 +35,55 @@ const ViewProperty = () => {
   }, [data]);
 
   if (loading) {
-    return (
-      <p className="m-5" style={{ paddingTop: "5rem" }}>
-        Loading...
-      </p>
-    );
+    return <LoadingAnimation />;
   }
 
   if (error) {
     return (
-      <p className="m-5" style={{ paddingTop: "5rem" }}>
-        Error: {error.message}
-      </p>
+      <div className="container-fluid">
+        <div
+          className="row d-flex justify-content-center align-items-center"
+          style={{ height: "85vh" }}
+        >
+          <div className="col-sm-12 d-flex justify-content-center align-items-center">
+            <img
+              src="https://images.template.net/84921/free-something-went-wrong-illustration-ujbiu.jpg"
+              alt="Page Not Found"
+              className="img-fluid"
+              width={650}
+            />
+          </div>
+        </div>
+      </div>
     );
   }
 
   if (!data || data.length === 0) {
     return (
-      <p className="m-5" style={{ paddingTop: "5rem" }}>
-        No data available
-      </p>
+      <div className="container-fluid">
+        <div
+          className="row d-flex justify-content-center align-items-center"
+          style={{ height: "85vh" }}
+        >
+          <div className="col-sm-6 d-flex justify-content-center align-items-center">
+            <img
+              src="https://michassi.com/assets/web//images/no_data_found.png"
+              alt="No Data Found"
+            />
+          </div>
+        </div>
+      </div>
     );
   }
-
   const passingData = (e) => {
     e.preventDefault();
-    dispatch(propertyBook(data));
-    if (tenantLoggedIn) {
-      navigate("/tenant/waiting");
-    } else {
-      navigate("/login", { state: true });
+    if (window.confirm("Are you sure?")) {
+      dispatch(propertyBook(data));
+      if (tenantLoggedIn) {
+        navigate("/tenant/waiting");
+      } else {
+        navigate("/login", { state: true });
+      }
     }
   };
 
@@ -72,9 +92,9 @@ const ViewProperty = () => {
       <div style={{ marginTop: 80 }}>
         <section>
           {/* Sub Header Start */}
-          <div className="row d-sm-flex justify-content-center align-items-center">
+          <div className="row d-sm-flex justify-content-center align-items-center my-5">
             <div className="col-sm-1 text-center border border-muted py-2">
-              <img src="./images/house.png" alt="house rent" />
+              <img src="/images/house.png" alt="house rent" />
             </div>
             <div className="col-sm-6 border border-muted text-center">
               <h5 className="p-4">
@@ -95,36 +115,9 @@ const ViewProperty = () => {
             <div className="col-sm-1 text-center border border-muted py-3">
               <p className="mb-0 fow-600 pb-0">₹ {details.deposit} </p>
               <small>Deposit</small>
-            </div>            
-          </div>
-          {/* Sub Header End */}
-
-          {/* Breadcrumb Start */}
-          <div className="row p-2 pl-4">
-            <div className="col-sm-6">
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb my-0 py-0 bg-white d-flex align-items-center">
-                  <li className="breadcrumb-item">
-                    <Link to="/" className="text-dark fos-14">
-                      Home
-                    </Link>
-                  </li>
-                  <li className="breadcrumb-item" aria-current="page">
-                    <Link to="/searched" className="text-dark fos-14">
-                      Searched property
-                    </Link>
-                  </li>
-                  <li
-                    className="breadcrumb-item active fos-14"
-                    aria-current="page"
-                  >
-                    View property
-                  </li>
-                </ol>
-              </nav>
             </div>
           </div>
-          {/* Breadcrumb End */}
+          {/* Sub Header End */}
 
           {/* Main Content Start */}
           <div
@@ -271,7 +264,7 @@ const ViewProperty = () => {
                       Contact Owner
                     </button>
                   )}
-                </div>               
+                </div>
               </div>
             </div>
             {/* Detail Blocks End*/}

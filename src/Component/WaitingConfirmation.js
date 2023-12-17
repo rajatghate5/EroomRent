@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import { propertyBook } from "../actions";
@@ -13,13 +13,13 @@ const WaitingConfirmation = () => {
   const navigate = useNavigate();
   const tenantID = useSelector((state) => state.detailReducer.id);
   const propertyID = useSelector((state) => state.detailReducer.propertyId);
-
+  
   const returnHome = (time) => {
-    if (propertyID !== "" && tenantID !== "") {
+    if (propertyID !== "" && tenantID !== "") {  
       axios
         .post("http://127.0.0.1:5000/booking", {
-          propertyId: propertyID,
-          tenantId: tenantID,
+          propertyID,
+          tenantID
         })
         .then((res) => {
           console.log(res.data);
@@ -42,7 +42,7 @@ const WaitingConfirmation = () => {
   useEffect(() => {
     setCount(count++);
     if (count === 2) {
-      setTimeout(() => {        
+      setTimeout(() => {
         returnHome(5000);
       }, 7000);
     }
@@ -60,7 +60,7 @@ const WaitingConfirmation = () => {
                   <i className="fas fa-exclamation fa-1x text-danger"></i>
                 </h3>
                 <span className="mb-2 h-100 py-1">
-                  It Will Automatically redirect you to Home
+                  It will automatically redirect you to home
                 </span>
               </div>
             </div>

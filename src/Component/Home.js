@@ -79,9 +79,9 @@ const Home = () => {
         {/* <!-- Main Content --> */}
         <div
           className="row justify-content-center"
-          style={{ height: "100vh", marginTop: "80" }}
+          style={{ height: "80vh", marginTop: "80" }}
         >
-          <div className="col-sm-6">
+          <div className="col-sm-6 p-2">
             <div className="card text-center border-0">
               <h2 className="card-title text-secondary my-5">
                 Find Room|Flats|Hostel|PG in easiest way
@@ -162,9 +162,9 @@ const Home = () => {
                                     type="button"
                                     id="button-addon2"
                                     state={{
+                                      customLocation: location.current?.value,
                                       propertyData,
                                       subPropertyData,
-                                      customLocation: location.current?.value,
                                     }}
                                   >
                                     <i
@@ -196,10 +196,11 @@ const Home = () => {
                           </div>
 
                           {/* <!-- Radio Buttons & Dropdown Rent --> */}
-                          <div className="d-flex justify-content-start align-items-center border py-4">
+                          <div className="d-flex justify-content-start align-items-center border py-3 px-2">
                             <div
-                              className="d-flex flex-wrap justify-content-around align-items-center w-50"
-                              onInput={(e) => radioCheck(e)}
+                              className="d-flex flex-wrap justify-content-center align-items-center px-2 w-75"                              
+                              onInput={(e) => radioCheck(e)}                              
+                              style={{gap: '1.2rem'}}
                             >
                               <div className="custom-control custom-radio">
                                 <input

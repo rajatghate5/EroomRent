@@ -2,6 +2,7 @@ import {
   OWNER_LOGIN,
   BROKER_LOGIN,
   TENANT_LOGIN,
+  ADMIN_LOGIN,
   GET_DETAILS,
   LOG_OUT,
   PROPERTY_BOOK,
@@ -25,6 +26,13 @@ export const tenantLogin = () => {
   localStorage.setItem("tenantLoggedIn", "true");
   return {
     type: TENANT_LOGIN,
+  };
+};
+
+export const adminLogin = () => {
+  localStorage.setItem("adminLoggedIn", "true");
+  return {
+    type: ADMIN_LOGIN,
   };
 };
 

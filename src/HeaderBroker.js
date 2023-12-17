@@ -1,16 +1,17 @@
 import React, {useState, useEffect}from "react";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "./actions";
 import axios from "axios";
+
 const HeaderBroker = () => {
   const dispatch = useDispatch();
   const [data, setData] = useState({});
-  const savedUserID = localStorage.getItem("id");
+  const userID = useSelector((state) => state.detailReducer.id);
   const baseUrl1 = "http://127.0.0.1:5000/brokersignup/";
 
   useEffect(() => {
-    axios(baseUrl1 + savedUserID)
+    axios(baseUrl1 + userID)
       .then((res) => {
         setData(res.data);
         console.log(res.data);
@@ -18,7 +19,7 @@ const HeaderBroker = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [savedUserID]);
+  }, [userID]);
   
   return (
     <>
@@ -59,8 +60,8 @@ const HeaderBroker = () => {
                     src="/images/person.svg"
                     alt="Person"
                     className="border rounded-circle"
-                    width="30px"
-                    height="30px"
+                    width={30}
+                    height={30}
                   />
                   <a
                     className="nav-link dropdown-toggle py-0 px-2"

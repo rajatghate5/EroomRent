@@ -703,9 +703,11 @@ const Dashboard = () => {
                             Mobile
                           </label>
                           <input
-                            type="number"
+                            type="text"
                             name="phone"
                             defaultValue={data.mobno}
+                            pattern="^[6-9]\d{9}$"
+                            title="Enter a valid phone number starting with a digit between 6 and 9, followed by 9 digits."
                             className="border border-muted pl-2 w-75 fos-14"
                             style={{ height: 35, marginLeft: 11 }}
                             ref={updatedMobile}
@@ -796,6 +798,8 @@ const Dashboard = () => {
                             ref={updatedPassword}
                             className="border border-muted pl-2 w-50 fos-14"
                             style={{ height: 35, marginLeft: 11 }}
+                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                            title="Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character. Minimum length is 8 characters."
                           />
                         </div>
                         <div className="d-flex justify-content-between align-items-center mt-4">

@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from 'axios'
+import axios from "axios";
 
 const Footer = () => {
   const [suggestions, setSuggestions] = useState([]);
@@ -50,64 +50,60 @@ const Footer = () => {
           </ul>
           {/* <!-- Tab panes --> */}
           <div className="tab-content">
-            <div id="room-rent" className="container tab-pane active mx-2 py-4">              
+            <div id="room-rent" className="container tab-pane active mx-2 py-4">
               <div className="d-flex justify-content-start flex-wrap align-items-center">
-              {
-                suggestions.map((area, i) => (
+                {suggestions.map((area, i) => (
                   <Link
-                  className="text-dark px-2 border-right border-dark text-capitalize"
-                  to="/searched"
-                  key={i}
-                >
-                  {area}
-                </Link>
-                ))
-              }               
+                    className="text-dark px-2 border-right border-dark text-capitalize"
+                    to="/searched"
+                    state={{ customLocation: area, propertyData: "room" }}
+                    key={i}
+                  >
+                    {area}
+                  </Link>
+                ))}
               </div>
             </div>
-            <div id="flat-rent" className="container tab-pane fade mx-2 py-4">              
-            <div className="d-flex justify-content-start flex-wrap align-items-center">
-              {
-                suggestions.map((area, i) => (
+            <div id="flat-rent" className="container tab-pane fade mx-2 py-4">
+              <div className="d-flex justify-content-start flex-wrap align-items-center">
+                {suggestions.map((area, i) => (
                   <Link
-                  className="text-dark px-2 border-right border-dark text-capitalize"
-                  to="/searched"
-                  key={i}
-                >
-                  {area}
-                </Link>
-                ))
-              }               
+                    className="text-dark px-2 border-right border-dark text-capitalize"
+                    to="/searched"
+                    key={i}
+                    state={{ customLocation: area, propertyData: "flat" }}
+                  >
+                    {area}
+                  </Link>
+                ))}
               </div>
             </div>
-            <div id="hostel-rent" className="container tab-pane fade mx-2 py-4">              
-            <div className="d-flex justify-content-start flex-wrap align-items-center">
-              {
-                suggestions.map((area, i) => (
+            <div id="hostel-rent" className="container tab-pane fade mx-2 py-4">
+              <div className="d-flex justify-content-start flex-wrap align-items-center">
+                {suggestions.map((area, i) => (
                   <Link
-                  className="text-dark px-2 border-right border-dark text-capitalize"
-                  to="/searched"
-                  key={i}
-                >
-                  {area}
-                </Link>
-                ))
-              }               
+                    className="text-dark px-2 border-right border-dark text-capitalize"
+                    to="/searched"
+                    state={{ customLocation: area, propertyData: "hostel" }}
+                    key={i}
+                  >
+                    {area}
+                  </Link>
+                ))}
               </div>
             </div>
-            <div id="pg-rent" className="container tab-pane fade mx-2 py-4">              
-            <div className="d-flex justify-content-start flex-wrap align-items-center">
-              {
-                suggestions.map((area, i) => (
+            <div id="pg-rent" className="container tab-pane fade mx-2 py-4">
+              <div className="d-flex justify-content-start flex-wrap align-items-center">
+                {suggestions.map((area, i) => (
                   <Link
-                  className="text-dark px-2 border-right border-dark text-capitalize"
-                  to="/searched"
-                  key={i}
-                >
-                  {area}
-                </Link>
-                ))
-              }               
+                    className="text-dark px-2 border-right border-dark text-capitalize"
+                    to="/searched"
+                    state={{ customLocation: area, propertyData: "pg" }}
+                    key={i}
+                  >
+                    {area}
+                  </Link>
+                ))}
               </div>
             </div>
           </div>
@@ -180,16 +176,10 @@ const Footer = () => {
               >
                 Terms & Conditions
               </Link>
-              <Link
-                to="/privacypolicy"
-                className="mx-3 text-secondary fos-20"
-              >
+              <Link to="/privacypolicy" className="mx-3 text-secondary fos-20">
                 Privacy Policy
               </Link>
-              <Link
-                to="/testimonial"
-                className="mx-3 text-secondary fos-20"
-              >
+              <Link to="/testimonial" className="mx-3 text-secondary fos-20">
                 Testimonials
               </Link>
               <Link to="/sitemap" className="mx-3 text-secondary fos-20">

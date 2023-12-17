@@ -29,6 +29,11 @@ import LayoutBroker from "./LayoutBroker";
 import Error from "./Component/Error";
 import WaitingConfirmation from "./Component/WaitingConfirmation";
 import EditYourProperty from "./Component/EditProperty";
+import ForgottenPassword from "./Component/ForgottenPassword";
+import Admin from "./Component/Admin";
+import LoginAdmin from "./Component/LoginAdmin";
+import UserEditAdmin from "./Component/UserEditAdmin";
+import PropertyEditAdmin from "./Component/PropertyEditAdmin";
 
 function App() {
   return (
@@ -55,6 +60,7 @@ function App() {
           <Route path="/testimonial" element={<Testimonial />} />
           <Route path="/viewproperty" element={<ViewProperty />} />
           <Route path="/searched" element={<Searched />} />
+          <Route path="/forgottenpassword" element={<ForgottenPassword />} />
           {/*No Footer in this component */}
         </Route>
       </Routes>
@@ -149,45 +155,19 @@ function App() {
 
       {/* Admin Start */}
       <Routes>
-        <Route path="/admin" element={<LayoutAdmin />}>
-          <Route index element={<Home />} />
-          <Route path="/admin/home" element={<Home />} />
-          <Route path="/admin/chat" element={<Chat />} />
-          <Route path="/admin/dashboard" element={<Dashboard />} />
-          <Route path="/admin/profile" element={<Profile />} />
-          <Route path="/admin/booking" element={<MyBooking />} />
-          <Route path="/admin/home" element={<Home />} />
-          <Route path="/admin/faq" element={<Faq />} />
-          <Route path="/admin/contact" element={<Contact />} />
-          <Route path="/admin/ownerplans" element={<OwnerPlans />} />
+        <Route path="/admin" element={<LoginAdmin />} />
+        <Route path="/admin/home" element={<LayoutAdmin />}>
+          <Route index element={<Admin />} />
+          <Route path="/admin/home/useredit" element={<UserEditAdmin />} />
           <Route
-            path="/admin/postyourproperty"
-            element={<PostYourProperty />}
+            path="/admin/home/propertyedit"
+            element={<PropertyEditAdmin />}
           />
-          <Route path="/admin/privacypolicy" element={<PrivacyPolicy />} />
-          <Route path="/admin/rentalagreement" element={<RentalAgreement />} />
-          <Route path="/admin/rentreceipt" element={<RentReceipt />} />{" "}
-          {/*No Footer in this component */}
-          <Route path="/admin/sitemap" element={<Sitemap />} />{" "}
-          {/*No Footer in this component */}
-          <Route path="/admin/tenantplans" element={<TenantPlans />} />
-          <Route
-            path="/admin/termsandconditions"
-            element={<TermsCondition />}
-          />
-          <Route path="/admin/testimonial" element={<Testimonial />} />
-          <Route path="/admin/viewproperty" element={<ViewProperty />} />
-          <Route path="/admin/searched" element={<Searched />} />{" "}
-          {/*No Footer in this component */}
         </Route>
       </Routes>
       {/* Admin End */}
       <Routes>
         <Route path="/blog" element={<Blog />} />
-      </Routes>
-      {/* Error Page */}
-      <Routes>
-        <Route path="/error" element={<Error />} />
       </Routes>
     </BrowserRouter>
   );

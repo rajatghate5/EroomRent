@@ -56,6 +56,7 @@ const FooterTenant = () => {
                   <Link
                     className="text-dark px-2 border-right border-dark text-capitalize"
                     to="/tenant/searched"
+                    state={{ customLocation: area, propertyData: "room" }}
                     key={i}
                   >
                     {area}
@@ -64,11 +65,12 @@ const FooterTenant = () => {
               </div>
             </div>
             <div id="flat-rent" className="container tab-pane fade mx-2">
-            <div className="d-flex justify-content-start flex-wrap align-items-center">
+              <div className="d-flex justify-content-start flex-wrap align-items-center">
                 {suggestions.map((area, i) => (
                   <Link
                     className="text-dark px-2 border-right border-dark text-capitalize"
                     to="/tenant/searched"
+                    state={{ customLocation: area, propertyData: "flat" }}
                     key={i}
                   >
                     {area}
@@ -77,11 +79,12 @@ const FooterTenant = () => {
               </div>
             </div>
             <div id="hostel-rent" className="container tab-pane fade mx-2">
-            <div className="d-flex justify-content-start flex-wrap align-items-center">
+              <div className="d-flex justify-content-start flex-wrap align-items-center">
                 {suggestions.map((area, i) => (
                   <Link
                     className="text-dark px-2 border-right border-dark text-capitalize"
                     to="/tenant/searched"
+                    state={{ customLocation: area, propertyData: "hostel" }}
                     key={i}
                   >
                     {area}
@@ -90,11 +93,12 @@ const FooterTenant = () => {
               </div>
             </div>
             <div id="pg-rent" className="container tab-pane fade mx-2">
-            <div className="d-flex justify-content-start flex-wrap align-items-center">
+              <div className="d-flex justify-content-start flex-wrap align-items-center">
                 {suggestions.map((area, i) => (
                   <Link
                     className="text-dark px-2 border-right border-dark text-capitalize"
                     to="/tenant/searched"
+                    state={{ customLocation: area, propertyData: "pg" }}
                     key={i}
                   >
                     {area}

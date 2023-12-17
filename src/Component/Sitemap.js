@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
+import { useSelector } from "react-redux";
 const Sitemap = () => {
   const [suggestions, setSuggestions] = useState([]);
   useEffect(() => {
@@ -14,6 +15,9 @@ const Sitemap = () => {
       })
       .catch((err) => console.log(err));
   }, []);
+  const tenantLoggedIn = useSelector(
+    (state) => state.detailReducer.tenantLoggedIn
+  );
   return (
     <>
       <section style={{ marginTop: 120 }}>
@@ -30,21 +34,20 @@ const Sitemap = () => {
               Flats For Rent
             </h3>
             <div className="d-flex justify-content-start flex-wrap align-items-center">
-              {
-                suggestions.map((area, i) => (
-                  <Link
+              {suggestions.map((area, i) => (
+                <Link
                   className="text-dark px-2 border-right border-dark text-capitalize"
-                  to="/searched"
+                  to={tenantLoggedIn ? "/tenant/searched" : "/searched"}
+                  state={{ customLocation: area, propertyData: "flat" }}
                   key={i}
                 >
                   {area}
                 </Link>
-                ))
-              }               
-              </div>
+              ))}
+            </div>
           </div>
         </div>
-        
+
         {/* Rooms */}
         <div className="row justify-content-center align-items-center mt-5">
           <div className="col-sm-11 text-left py-4">
@@ -52,40 +55,55 @@ const Sitemap = () => {
               Rooms For Rent
             </h3>
             <div className="d-flex justify-content-start flex-wrap align-items-center">
-              {
-                suggestions.map((area, i) => (
-                  <Link
+              {suggestions.map((area, i) => (
+                <Link
                   className="text-dark px-2 border-right border-dark text-capitalize"
-                  to="/searched"
+                  to={tenantLoggedIn ? "/tenant/searched" : "/searched"}
+                  state={{ customLocation: area, propertyData: "room" }}
                   key={i}
                 >
                   {area}
                 </Link>
-                ))
-              }               
-              </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Hostel/PGs */}
+        {/* Hostel */}
         <div className="row justify-content-center align-items-center mt-5">
           <div className="col-sm-11 text-left py-4">
-            <h3 className="font-weight-light text-secondary mx-2">
-              Hostel/PGs
-            </h3>
+            <h3 className="font-weight-light text-secondary mx-2">Hostel</h3>
             <div className="d-flex justify-content-start flex-wrap align-items-center">
-              {
-                suggestions.map((area, i) => (
-                  <Link
+              {suggestions.map((area, i) => (
+                <Link
                   className="text-dark px-2 border-right border-dark text-capitalize"
-                  to="/searched"
+                  to={tenantLoggedIn ? "/tenant/searched" : "/searched"}
+                  state={{ customLocation: area, propertyData: "hostel" }}
                   key={i}
                 >
                   {area}
                 </Link>
-                ))
-              }               
-              </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* PGs */}
+        <div className="row justify-content-center align-items-center mt-5">
+          <div className="col-sm-11 text-left py-4">
+            <h3 className="font-weight-light text-secondary mx-2">PGs</h3>
+            <div className="d-flex justify-content-start flex-wrap align-items-center">
+              {suggestions.map((area, i) => (
+                <Link
+                  className="text-dark px-2 border-right border-dark text-capitalize"
+                  to={tenantLoggedIn ? "/tenant/searched" : "/searched"}
+                  state={{ customLocation: area, propertyData: "pg" }}
+                  key={i}
+                >
+                  {area}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>

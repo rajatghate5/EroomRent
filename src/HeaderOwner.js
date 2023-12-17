@@ -59,8 +59,8 @@ const HeaderOwner = () => {
                     src="/images/person.svg"
                     alt="Person"
                     className="border rounded-circle"
-                    width="30px"
-                    height="30px"
+                    width={30}
+                    height={30}
                   />
                   <a
                     className="nav-link dropdown-toggle py-0 px-2"

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 const Signup = () => {
   const opt = useRef();
+  const [reTypePass, setReTypePass] = useState("");
   const [reg, setReg] = useState({
     name: "",
     email: "",
@@ -18,84 +19,89 @@ const Signup = () => {
   const setData = (e) => {
     e.preventDefault();
     console.log(opt.current.value);
-    switch (opt.current.value) {
-      case "broker":
-        axios
-          .post("http://127.0.0.1:5000/brokersignup", {
-            name: reg.name,
-            email: reg.email,
-            password: reg.password,
-            mobno: reg.mobno,
-            address: reg.address,
-          })
-          .then((res) => {
-            console.log(res.data);
-            if (res.data.status === "1") {
-              window.location.href = "/login";
-              console.log(res.data.msg);
-            } else if (res.data.status === "0") {
-              setFlag(true);
-              setMsg1("User Already exist");
-            } else {
-              setFlag(true);
-              setMsg1("SignUp Failed");
-            }
-          })
-          .catch((err) => console.log(err));
-        break;
-      case "owner":
-        axios
-          .post("http://127.0.0.1:5000/ownersignup", {
-            name: reg.name,
-            email: reg.email,
-            password: reg.password,
-            mobno: reg.mobno,
-            address: reg.address,
-          })
-          .then((res) => {
-            console.log(res.data);
-            if (res.data.status === "1") {
-              window.location.href = "/login";
-              console.log(res.data.msg);
-            } else if (res.data.status === "0") {
-              setFlag(true);
-              setMsg1("User Already exist");
-            } else {
-              setFlag(true);
-              setMsg1("SignUp Failed");
-            }
-          })
-          .catch((err) => console.log(err));
-        break;
-      case "tenant":
-        axios
-          .post("http://127.0.0.1:5000/tenantsignup", {
-            name: reg.name,
-            email: reg.email,
-            password: reg.password,
-            mobno: reg.mobno,
-            address: reg.address,
-          })
-          .then((res) => {
-            console.log(res.data);
-            if (res.data.status === "1") {
-              window.location.href = "/login";
-              console.log(res.data.msg);
-            } else if (res.data.status === "0") {
-              setFlag(true);
-              console.log(res.data.msg);
-              setMsg1(res.data.msg);
-            } else {
-              setFlag(true);
-              setMsg1("SignUp Failed");
-            }
-          })
-          .catch((err) => console.log(err));
-        break;
-      default:
-        setFlag(true);
-        setMsg1("SignUp Failed");
-        return;
+    if (reg.password === reTypePass) {
+      switch (opt.current.value) {
+        case "broker":
+          axios
+            .post("http://127.0.0.1:5000/brokersignup", {
+              name: reg.name,
+              email: reg.email,
+              password: reg.password,
+              mobno: reg.mobno,
+              address: reg.address,
+            })
+            .then((res) => {
+              console.log(res.data);
+              if (res.data.status === "1") {
+                window.location.href = "/login";
+                console.log(res.data.msg);
+              } else if (res.data.status === "0") {
+                setFlag(true);
+                setMsg1("User Already exist");
+              } else {
+                setFlag(true);
+                setMsg1("SignUp Failed");
+              }
+            })
+            .catch((err) => console.log(err));
+          break;
+        case "owner":
+          axios
+            .post("http://127.0.0.1:5000/ownersignup", {
+              name: reg.name,
+              email: reg.email,
+              password: reg.password,
+              mobno: reg.mobno,
+              address: reg.address,
+            })
+            .then((res) => {
+              console.log(res.data);
+              if (res.data.status === "1") {
+                window.location.href = "/login";
+                console.log(res.data.msg);
+              } else if (res.data.status === "0") {
+                setFlag(true);
+                setMsg1("User Already exist");
+              } else {
+                setFlag(true);
+                setMsg1("SignUp Failed");
+              }
+            })
+            .catch((err) => console.log(err));
+          break;
+        case "tenant":
+          axios
+            .post("http://127.0.0.1:5000/tenantsignup", {
+              name: reg.name,
+              email: reg.email,
+              password: reg.password,
+              mobno: reg.mobno,
+              address: reg.address,
+            })
+            .then((res) => {
+              console.log(res.data);
+              if (res.data.status === "1") {
+                window.location.href = "/login";
+                console.log(res.data.msg);
+              } else if (res.data.status === "0") {
+                setFlag(true);
+                console.log(res.data.msg);
+                setMsg1(res.data.msg);
+              } else {
+                setFlag(true);
+                setMsg1("SignUp Failed");
+              }
+            })
+            .catch((err) => console.log(err));
+          break;
+        default:
+          setFlag(true);
+          setMsg1("SignUp Failed");
+          return;
+      }
+    } else {
+      setFlag(true);
+      setMsg1("Password is not matched");
     }
   };
 
@@ -201,22 +207,36 @@ const Signup = () => {
                   className="form-control"
                   id="inputPassword"
                   placeholder="Enter Password"
+                  pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
                   onChange={(e) => setReg({ ...reg, password: e.target.value })}
                   required
+                  title="Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character. Minimum length is 8 characters."
                 />
               </div>
             </div>
             <div className="form-group row w-100">
               <div className="col-sm-12 px-0">
                 <input
-                  type="number"
+                  type="password"
+                  className="form-control"
+                  id="inputPassword"
+                  placeholder="Retype Password"                  
+                  onChange={(e) => setReTypePass(e.target.value)}
+                  required                  
+                />
+              </div>
+            </div>
+            <div className="form-group row w-100">
+              <div className="col-sm-12 px-0">
+                <input
+                  type="text"
                   className="form-control"
                   id="inputNumber"
-                  min={10}
-                  // max={10}
+                  pattern="^[6-9]\d{9}$"
                   placeholder="Enter Mobile Number"
                   required
                   onChange={(e) => setReg({ ...reg, mobno: e.target.value })}
+                  title="Enter a valid phone number starting with a digit between 6 and 9, followed by 9 digits."
                 />
               </div>
             </div>

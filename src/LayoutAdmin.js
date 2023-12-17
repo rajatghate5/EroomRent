@@ -1,18 +1,14 @@
-import { Outlet } from "react-router-dom"
-import HeaderAdmin from './HeaderAdmin';
-import FooterAdmin from './FooterAdmin';
-import './style.css'
+import { Outlet } from "react-router-dom";
+import HeaderAdmin from "./HeaderAdmin";
+import "./style.css";
 
-const LayoutAdmin = () => {  
+const LayoutAdmin = () => {
   return (
     <div id="container">
       <HeaderAdmin />
-      <div className="container-fluid mt-5 p-0">
-        <Outlet />
-        <FooterAdmin />
-      </div>
+      <Outlet />
     </div>
-  )
-}
+  );
+};
 
-export default LayoutAdmin
+export default LayoutAdmin;

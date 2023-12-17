@@ -29,6 +29,8 @@ const PostYourProperty = () => {
     waterRef: useRef(null),
     securityRef: useRef(null),
     floorRef: useRef(null),
+    addressRef: useRef(null),
+    pincodeRef: useRef(null),
     locationRef: useRef(null),
     tenantTypeRef: useRef(null),
     availableDateRef: useRef(null),
@@ -126,6 +128,8 @@ const PostYourProperty = () => {
     formData.append("water", inputRefs.waterRef.current.value);
     formData.append("security", inputRefs.securityRef.current.value);
     formData.append("floor", inputRefs.floorRef.current.value);
+    formData.append("address", inputRefs.addressRef.current.value);
+    formData.append("pincode", inputRefs.pincodeRef.current.value);
     formData.append("location", inputRefs.locationRef.current.value);
     formData.append("tenantType", inputRefs.tenantTypeRef.current.value);
     formData.append("availableDate", inputRefs.availableDateRef.current.value);
@@ -266,6 +270,7 @@ const PostYourProperty = () => {
                     placeholder="Enter Name"
                     defaultValue={data.name}
                     ref={inputRefs.nameRef}
+                    required={ownerLoggedIn || brokerLoggedIn}
                   />
                   <input
                     type="email"
@@ -274,6 +279,7 @@ const PostYourProperty = () => {
                     placeholder="Enter Email"
                     defaultValue={data.email}
                     ref={inputRefs.emailRef}
+                    required={ownerLoggedIn || brokerLoggedIn}
                   />
                   <div className="input-group w-45 w--100 m-2">
                     <div className="input-group-prepend">
@@ -286,6 +292,7 @@ const PostYourProperty = () => {
                       aria-label="Text input with dropdown button"
                       defaultValue={data.mobno}
                       ref={inputRefs.mobileRef}
+                      required={ownerLoggedIn || brokerLoggedIn}
                     />
                   </div>
                   <input
@@ -294,6 +301,7 @@ const PostYourProperty = () => {
                     ref={inputRefs.imageRef}
                     onChange={(e) => setFiles(e.target.files)}
                     multiple
+                    required={ownerLoggedIn || brokerLoggedIn}
                   />
                   <div className="input-group w-45 w--100 m-2">
                     <div className="input-group-prepend">
@@ -304,6 +312,7 @@ const PostYourProperty = () => {
                       className="form-control"
                       placeholder="Enter Deposit"
                       ref={inputRefs.depositRef}
+                      required={ownerLoggedIn || brokerLoggedIn}
                     />
                   </div>
                   <div className="input-group w-45 w--100 m-2">
@@ -315,6 +324,7 @@ const PostYourProperty = () => {
                       className="form-control"
                       placeholder="Enter Rent"
                       ref={inputRefs.rentRef}
+                      required={ownerLoggedIn || brokerLoggedIn}
                     />
                   </div>
                   <input
@@ -323,6 +333,7 @@ const PostYourProperty = () => {
                     id="builtup"
                     placeholder="Enter Builtup Area(sqft)"
                     ref={inputRefs.areaRef}
+                    required={ownerLoggedIn || brokerLoggedIn}
                   />
                   <div className="form-group w-45 w--100 m-2">
                     <select
@@ -330,6 +341,7 @@ const PostYourProperty = () => {
                       id="parking"
                       className="form-control"
                       ref={inputRefs.parkingRef}
+                      required={ownerLoggedIn || brokerLoggedIn}
                     >
                       <option disabled selected>
                         Parking
@@ -345,6 +357,7 @@ const PostYourProperty = () => {
                       id="building-age"
                       className="form-control"
                       ref={inputRefs.buildingAgeRef}
+                      required={ownerLoggedIn || brokerLoggedIn}
                     >
                       <option disabled selected>
                         Age Of Building
@@ -362,6 +375,7 @@ const PostYourProperty = () => {
                       id="balcony"
                       className="form-control"
                       ref={inputRefs.balconyRef}
+                      required={ownerLoggedIn || brokerLoggedIn}
                     >
                       <option disabled selected>
                         No. of Balcony
@@ -379,6 +393,7 @@ const PostYourProperty = () => {
                       id="furnishing"
                       className="form-control"
                       ref={inputRefs.furnishingRef}
+                      required={ownerLoggedIn || brokerLoggedIn}
                     >
                       <option disabled selected>
                         Furnishing
@@ -394,6 +409,7 @@ const PostYourProperty = () => {
                       id="bathroom"
                       className="form-control"
                       ref={inputRefs.bathroomRef}
+                      required={ownerLoggedIn || brokerLoggedIn}
                     >
                       <option disabled selected>
                         No. of Bathroom
@@ -410,6 +426,7 @@ const PostYourProperty = () => {
                       id="facing"
                       className="form-control"
                       ref={inputRefs.facingRef}
+                      required={ownerLoggedIn || brokerLoggedIn}
                     >
                       <option disabled selected>
                         Facing
@@ -426,6 +443,7 @@ const PostYourProperty = () => {
                       id="non-veg"
                       className="form-control"
                       ref={inputRefs.nonVegAllowedRef}
+                      required={ownerLoggedIn || brokerLoggedIn}
                     >
                       <option disabled selected>
                         Non Veg Allowed
@@ -440,6 +458,7 @@ const PostYourProperty = () => {
                       id="water"
                       className="form-control"
                       ref={inputRefs.waterRef}
+                      required={ownerLoggedIn || brokerLoggedIn}
                     >
                       <option disabled selected>
                         Water Supply
@@ -454,6 +473,7 @@ const PostYourProperty = () => {
                       id="security"
                       className="form-control"
                       ref={inputRefs.securityRef}
+                      required={ownerLoggedIn || brokerLoggedIn}
                     >
                       <option disabled selected>
                         Gated Security
@@ -471,19 +491,41 @@ const PostYourProperty = () => {
                       min={0}
                       max={10}
                       ref={inputRefs.floorRef}
+                      required={ownerLoggedIn || brokerLoggedIn}
                     />
                   </div>
+                  <input
+                    type="text"
+                    className="form-control w-45 w--100 m-2"
+                    id="address"
+                    placeholder="Enter Address"
+                    ref={inputRefs.addressRef}
+                    required={ownerLoggedIn || brokerLoggedIn}
+                  />
+                  <input
+                    type="number"
+                    className="form-control w-45 w--100 m-2"
+                    id="pincode"
+                    placeholder="Enter Pincode"
+                    ref={inputRefs.pincodeRef}
+                    required={ownerLoggedIn || brokerLoggedIn}
+                  />
                   <div className="form-group w-45 w--100 m-2">
                     <select
                       className="form-control"
                       id="exampleFormControlSelect1"
                       ref={inputRefs.locationRef}
+                      required={ownerLoggedIn || brokerLoggedIn}
                     >
                       <option value selected disabled>
                         Select Location
                       </option>
                       {suggestions.map((area, i) => (
-                        <option value={area} className="text-capitalize">
+                        <option
+                          value={area}
+                          className="text-capitalize"
+                          key={i}
+                        >
                           {area}
                         </option>
                       ))}
@@ -495,6 +537,7 @@ const PostYourProperty = () => {
                       id="p-tenants"
                       className="form-control"
                       ref={inputRefs.tenantTypeRef}
+                      required={ownerLoggedIn || brokerLoggedIn}
                     >
                       <option disabled selected>
                         Preferred Tenants
@@ -512,6 +555,7 @@ const PostYourProperty = () => {
                       className="form-control w-100"
                       id="availability"
                       ref={inputRefs.availableDateRef}
+                      required={ownerLoggedIn || brokerLoggedIn}
                     />
                   </div>
                   <p className="text-dark font-weight-bold w-100 text-left my-4 pl-2">
@@ -553,7 +597,8 @@ const PostYourProperty = () => {
                               className="custom-control-input"
                               id="room"
                               name="property-rent-category"
-                              defaultValue="room"
+                              value="room"
+                              required={ownerLoggedIn || brokerLoggedIn}
                             />
                             <label
                               className="custom-control-label"
@@ -568,7 +613,8 @@ const PostYourProperty = () => {
                               className="custom-control-input"
                               id="flat"
                               name="property-rent-category"
-                              defaultValue="flat"
+                              value="flat"
+                              required={ownerLoggedIn || brokerLoggedIn}
                             />
                             <label
                               className="custom-control-label"
@@ -583,7 +629,8 @@ const PostYourProperty = () => {
                               className="custom-control-input"
                               id="pg"
                               name="property-rent-category"
-                              defaultValue="pg"
+                              value="pg"
+                              required={ownerLoggedIn || brokerLoggedIn}
                             />
                             <label
                               className="custom-control-label"
@@ -598,7 +645,8 @@ const PostYourProperty = () => {
                               className="custom-control-input"
                               id="hostel"
                               name="property-rent-category"
-                              defaultValue="hostel"
+                              value="hostel"
+                              required={ownerLoggedIn || brokerLoggedIn}
                             />
                             <label
                               className="custom-control-label"
@@ -623,7 +671,7 @@ const PostYourProperty = () => {
                               className="custom-control-input"
                               id="office"
                               name="property-commercial-category"
-                              defaultValue="office"
+                              value="office"
                             />
                             <label
                               className="custom-control-label"
@@ -638,7 +686,7 @@ const PostYourProperty = () => {
                               className="custom-control-input"
                               id="rest&cafe"
                               name="property-commercial-category"
-                              defaultValue="rest&cafe"
+                              value="rest&cafe"
                             />
                             <label
                               className="custom-control-label"
@@ -653,7 +701,7 @@ const PostYourProperty = () => {
                               className="custom-control-input"
                               id="shop"
                               name="property-commercial-category"
-                              defaultValue="shop"
+                              value="shop"
                             />
                             <label
                               className="custom-control-label"
@@ -668,7 +716,7 @@ const PostYourProperty = () => {
                               className="custom-control-input"
                               id="showroom"
                               name="property-commercial-category"
-                              defaultValue="showroom"
+                              value="showroom"
                             />
                             <label
                               className="custom-control-label"
@@ -683,7 +731,7 @@ const PostYourProperty = () => {
                               className="custom-control-input"
                               id="industrial"
                               name="property-commercial-category"
-                              defaultValue="industrial"
+                              value="industrial"
                             />
                             <label
                               className="custom-control-label"
@@ -698,7 +746,7 @@ const PostYourProperty = () => {
                               className="custom-control-input"
                               id="god/var"
                               name="property-commercial-category"
-                              defaultValue="god/var"
+                              value="god/var"
                             />
                             <label
                               className="custom-control-label"
@@ -713,7 +761,7 @@ const PostYourProperty = () => {
                               className="custom-control-input"
                               id="other"
                               name="property-commercial-category"
-                              defaultValue="other"
+                              value="other"
                             />
                             <label
                               className="custom-control-label"
@@ -731,7 +779,10 @@ const PostYourProperty = () => {
                   <div className="w-45 w--100 m-2">
                     <div className="form-group">
                       <div className="card">
-                        <div className="card-header p-2 bg-white">
+                        <div
+                          className="card-header bg-white"
+                          style={{ padding: "0.35rem" }}
+                        >
                           <label
                             htmlFor="exampleFormControlSelect1"
                             className="text-center w-100"
@@ -739,7 +790,10 @@ const PostYourProperty = () => {
                             Select Sub Category
                           </label>
                         </div>
-                        <div className="card-body p-2">
+                        <div
+                          className="card-body"
+                          style={{ padding: "0.57rem" }}
+                        >
                           {["room", "flat", "pg", "hostel"].map(
                             (category, index) => (
                               <select
@@ -751,6 +805,13 @@ const PostYourProperty = () => {
                                 }}
                                 onChange={(e) =>
                                   setSubPropertyData(e.target.value)
+                                }
+                                required={
+                                  ownerLoggedIn
+                                    ? true
+                                    : brokerLoggedIn
+                                    ? true
+                                    : false
                                 }
                               >
                                 {category === "room" && (
@@ -824,7 +885,7 @@ const PostYourProperty = () => {
                       </div>
                     </div>
                   </div>
-
+                  {/* Description */}
                   <div className="form-group w-75 m-2">
                     <label htmlFor="description">Description:</label>
                     <textarea
@@ -832,6 +893,7 @@ const PostYourProperty = () => {
                       rows={5}
                       id="description"
                       ref={inputRefs.descriptionRef}
+                      required={ownerLoggedIn || brokerLoggedIn}
                     />
                   </div>
                   {/* WhatsApp */}

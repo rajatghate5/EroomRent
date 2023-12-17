@@ -6,8 +6,8 @@ import { useSelector } from "react-redux";
 import LoadingAnimation from "./LoadingAnimation";
 
 const Searched = () => {
-  const [min, setMin] = useState(0);
-  const [max, setMax] = useState(500000);
+  // const [min, setMin] = useState(0);
+  // const [max, setMax] = useState(50000);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,41 +16,96 @@ const Searched = () => {
   const tenantLoggedIn = useSelector(
     (state) => state.detailReducer.tenantLoggedIn
   );
-  const calcLeftPosition = (value) => ((value - 0) / (500000 - 0)) * 100;
+  console.log(searchData);
+  // const calcLeftPosition = (value) => ((value - 0) / (50000 - 0)) * 100;
 
-  const handleMinChange = (e) => {
-    const newValue = parseInt(e.target.value);
-    if (newValue > max) return;
-    setMin(newValue);
-  };
+  // const handlePreferredTenantChange = (tenantType) => {
+  //   setPreferredTenants((prevTenants) => ({
+  //     ...prevTenants,
+  //     [tenantType]: !prevTenants[tenantType],
+  //   }));
+  // };
 
-  const handleMaxChange = (e) => {
-    const newValue = parseInt(e.target.value);
-    if (newValue < min) return;
-    setMax(newValue);
-  };
+  // useEffect(() => {
+  //   axios
+  //     .get("http://127.0.0.1:5000/property")
+  //     .then((res) => {
+  //       const filteredData = res.data.filter((item) => {
+  //         const matchLocation = item.location === customLocation;
+  //         const matchPropertyType = item.propertyType === propertyData;
+  //         const matchSubCategory = item.subCategory === subPropertyData;
+
+  //         return matchLocation && matchPropertyType && matchSubCategory;
+  //       });
+
+  //       setData(filteredData);
+  //       // const priceFilteredData = filteredData.filter((detail) => {
+  //       //   const rentValue = parseInt(detail.rent, 10);
+  //       //   return rentValue >= min && rentValue <= max;
+  //       // });
+  //       // setData(priceFilteredData);
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //       setError(err);
+  //     })
+  //     .finally(() => {
+  //       setLoading(false);
+  //     });
+  // }, [customLocation, propertyData, subPropertyData]);
 
   useEffect(() => {
-    axios
-      .get("http://127.0.0.1:5000/property")
-      .then((res) => {
-        const filteredData = res.data.filter((item) => {
-          const matchLocation = item.location === customLocation;
-          const matchPropertyType = item.propertyType === propertyData;
-          const matchSubCategory = item.subCategory === subPropertyData;
-
-          return matchLocation && matchPropertyType && matchSubCategory;
+    const numberOfKeys = Object.keys(searchData).length;
+    if (numberOfKeys <= 2) {
+      axios
+        .get("http://127.0.0.1:5000/getproperty", {
+          params: {
+            location: customLocation,
+            propertyType: propertyData,
+          },
+        })
+        .then((res) => {
+          setData(res.data);
+        })
+        .catch((err) => {
+          console.error(err);
+          setError(err);
+        })
+        .finally(() => {
+          setLoading(false);
         });
-        setData(filteredData);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    } else {
+      axios
+        .get("http://127.0.0.1:5000/getproperty", {
+          params: {
+            location: customLocation,
+            propertyType: propertyData,
+            subCategory: subPropertyData,
+          },
+        })
+        .then((res) => {
+          setData(res.data);
+        })
+        .catch((err) => {
+          console.error(err);
+          setError(err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
   }, [customLocation, propertyData, subPropertyData]);
+  // const handleMinChange = (e) => {
+  //   const newValue = parseInt(e.target.value);
+  //   if (newValue > max) return;
+  //   setMin(newValue);
+  // };
+
+  // const handleMaxChange = (e) => {
+  //   const newValue = parseInt(e.target.value);
+  //   if (newValue < min) return;
+  //   setMax(newValue);
+  // };
 
   if (loading) {
     return <LoadingAnimation />;
@@ -65,9 +120,10 @@ const Searched = () => {
         >
           <div className="col-sm-12 d-flex justify-content-center align-items-center">
             <img
-              src="https://cdni.iconscout.com/illustration/premium/thumb/404-error-3702359-3119148.png"
+              src="https://images.template.net/84921/free-something-went-wrong-illustration-ujbiu.jpg"
               alt="Page Not Found"
               className="img-fluid"
+              width={650}
             />
           </div>
         </div>
@@ -101,18 +157,18 @@ const Searched = () => {
           style={{ marginTop: 65, gap: "0.5rem" }}
         >
           {/* Filters Start */}
-          <div
+          {/* <div
             className="col-sm-3 bg-white px-0"
             style={{ position: "sticky", top: "12%", left: "4%" }}
           >
-            <div className="card shadow">
+            <div className="card shadow px-2">
               <div
-                className="card-header bg-white pb-0 py-2 px-0 d-flex justify-content-center align-items-center"
+                className="card-header bg-white pb-0 py-2 px-1 d-flex justify-content-center align-items-center"
                 style={{ borderBottom: "2px solid goldenrod" }}
               >
                 <h4>Filters</h4>
               </div>
-              <div className="card-body" style={{ height: "80vh" }}>
+              <div className="card-body" style={{ height: "78vh" }}>
                 <span
                   className="position-absolute cur-pointer"
                   style={{ top: "12%", right: "10%" }}
@@ -122,33 +178,7 @@ const Searched = () => {
                 </span>
                 <div className="row h-100">
                   <div className="col-sm-12 d-flex flex-column px-1">
-                    <div className="px-2 py-1">
-                      <p className="fow-600 fos-14">BHK Type</p>
-                      <div
-                        className="d-flex flex-wrap"
-                        style={{ gap: "0.5rem" }}
-                      >
-                        <span className="badge badge-light p-2 cur-pointer">
-                          1RK
-                        </span>
-                        <span className="badge badge-light p-2 cur-pointer">
-                          1BHK
-                        </span>
-                        <span className="badge badge-light p-2 cur-pointer">
-                          2BHK
-                        </span>
-                        <span className="badge badge-light p-2 cur-pointer">
-                          3BHK
-                        </span>
-                        <span className="badge badge-light p-2 cur-pointer">
-                          4BHK
-                        </span>
-                        <span className="badge badge-light p-2 cur-pointer">
-                          4+BHK
-                        </span>
-                      </div>
-                    </div>
-                    <div className="px-2 py-2">
+                    <div className="px-2 py-2 pt-5">
                       <p className="fow-600 fos-14">
                         Rent Range: ₹ {min} to ₹ {max}
                       </p>
@@ -158,7 +188,7 @@ const Searched = () => {
                           id="rangeMin"
                           value={min}
                           min={0}
-                          max={500000}
+                          max={50000}
                           onChange={handleMinChange}
                         />
                         <div
@@ -184,7 +214,7 @@ const Searched = () => {
                           id="rangeMax"
                           value={max}
                           min={0}
-                          max={500000}
+                          max={50000}
                           onChange={handleMaxChange}
                         />
                         <div
@@ -197,79 +227,6 @@ const Searched = () => {
                         ></div>
                       </div>
                     </div>
-                    {/* <div className="px-2 py-1">
-                      <p className="fow-600 fos-14">Availability</p>
-                      <div className="d-sm-flex flex-wrap">
-                        <div
-                          className="custom-control custom-radio custom-control-inline"
-                          style={{ marginRight: "2.25rem" }}
-                        >
-                          <input
-                            type="radio"
-                            id="customRadioInline1"
-                            name="customRadioInline1"
-                            className="custom-control-input"
-                          />
-                          <label
-                            className="custom-control-label fos-14"
-                            htmlFor="customRadioInline1"
-                          >
-                            Immediate{" "}
-                          </label>
-                        </div>
-                        <div
-                          className="custom-control custom-radio custom-control-inline"
-                          style={{ marginRight: 0 }}
-                        >
-                          <input
-                            type="radio"
-                            id="customRadioInline2"
-                            name="customRadioInline1"
-                            className="custom-control-input"
-                          />
-                          <label
-                            className="custom-control-label fos-14"
-                            htmlFor="customRadioInline2"
-                          >
-                            Within 15 Days
-                          </label>
-                        </div>
-                        <div
-                          className="custom-control custom-radio custom-control-inline"
-                          style={{ marginRight: "0.6rem" }}
-                        >
-                          <input
-                            type="radio"
-                            id="customRadioInline3"
-                            name="customRadioInline1"
-                            className="custom-control-input"
-                          />
-                          <label
-                            className="custom-control-label fos-14"
-                            htmlFor="customRadioInline1"
-                          >
-                            Within 30 Days{" "}
-                          </label>
-                        </div>
-                        <div
-                          className="custom-control custom-radio custom-control-inline"
-                          style={{ marginRight: 0 }}
-                        >
-                          <input
-                            type="radio"
-                            id="customRadioInline4"
-                            name="customRadioInline1"
-                            className="custom-control-input"
-                          />
-                          <label
-                            className="custom-control-label fos-14"
-                            htmlFor="customRadioInline2"
-                          >
-                            After 30 Days
-                          </label>
-                        </div>
-                      </div>
-                    </div> */}
                     <div className="px-2 py-1">
                       <p className="fow-600 fos-14">Preferred Tenants</p>
                       <div className="d-sm-flex flex-wrap">
@@ -281,6 +238,10 @@ const Searched = () => {
                             type="checkbox"
                             className="custom-control-input"
                             id="tenantsCheck1"
+                            checked={preferredTenants.family}
+                            onChange={() =>
+                              handlePreferredTenantChange("family")
+                            }
                           />
                           <label
                             className="custom-control-label fos-14"
@@ -336,56 +297,6 @@ const Searched = () => {
                         </div>
                       </div>
                     </div>
-                    {/* <div className="px-2 py-1">
-                      <p className="fow-600 fos-14">Property Type</p>
-                      <div className="d-sm-flex flex-column">
-                        <div
-                          className="custom-control custom-checkbox"
-                          style={{ marginRight: "3.95rem" }}
-                        >
-                          <input
-                            type="checkbox"
-                            className="custom-control-input"
-                            id="typeCheck1"
-                          />
-                          <label
-                            className="custom-control-label fos-14"
-                            htmlFor="typeCheck1"
-                          >
-                            Apartment
-                          </label>
-                        </div>
-                        <div className="custom-control custom-checkbox">
-                          <input
-                            type="checkbox"
-                            className="custom-control-input"
-                            id="typeCheck2"
-                          />
-                          <label
-                            className="custom-control-label fos-14"
-                            htmlFor="typeCheck2"
-                          >
-                            Independent
-                          </label>
-                        </div>
-                        <div
-                          className="custom-control custom-checkbox"
-                          style={{ marginRight: "0.9rem" }}
-                        >
-                          <input
-                            type="checkbox"
-                            className="custom-control-input"
-                            id="typeCheck3"
-                          />
-                          <label
-                            className="custom-control-label fos-14"
-                            htmlFor="typeCheck3"
-                          >
-                            Gated Community
-                          </label>
-                        </div>
-                      </div>
-                    </div> */}
                     <div className="px-2 py-1">
                       <p className="fow-600 fos-14">Furnishing</p>
                       <div
@@ -484,17 +395,20 @@ const Searched = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Filters End */}
           {/* Room Options Cards Start */}
-          <div className="col-sm-8 bg-lightest-grey">
+          <div className="col-sm-10 bg-lightest-grey">
             <div className="card border-0">
               <div className="card-header p-0 border-0 shadow bg-white d-sm-flex justify-content-between align-items-center px-5">
                 <nav aria-label="breadcrumb">
                   <ol className="breadcrumb my-0 py-3 bg-white">
                     <li className="breadcrumb-item">
-                      <Link to="/" className="text-dark fos-18">
+                      <Link
+                        to={tenantLoggedIn ? "/tenant" : "/"}
+                        className="text-dark fos-18"
+                      >
                         Home
                       </Link>
                     </li>
@@ -507,23 +421,6 @@ const Searched = () => {
                     </li>
                   </ol>
                 </nav>
-                <div className="d-flex justify-content-center align-items-center py-3">
-                  <small className="w-25">Sort By:</small>
-                  <select className="custom-select">
-                    <option selected value="new-first">
-                      Posted On (Newest First)
-                    </option>
-                    <option value="old-first">Posted On (Oldest First)</option>
-                    <option value="low-high">Rent (Low to High)</option>
-                    <option value="high-low">Rent (High to Low)</option>
-                    <option value="avail-earliest">
-                      Available From (Earliest First)
-                    </option>
-                    <option value="avail-oldest">
-                      Available From (Oldest First)
-                    </option>
-                  </select>
-                </div>
               </div>
               <div
                 className="card-body shadow d-flex flex-column p-0 bg-lightest-grey border-0"
@@ -531,43 +428,9 @@ const Searched = () => {
               >
                 {data.map((details, i) => (
                   <div className="card" key={i}>
-                    <div className="card-header bg-white p-0">
-                      <h5 className="card-title bg-white p-4 border-bottom border-muted">
-                        <span className="text-uppercase">
-                          {details.subCategory}
-                        </span>{" "}
-                        <span className="text-capitalize">
-                          {details.propertyType}
-                        </span>{" "}
-                        for Rent in{" "}
-                        <span className="text-capitalize">
-                          {" "}
-                          {details.location}
-                        </span>
-                      </h5>
-                      <div className="row border-muted py-2">
-                        <div className="col-sm-4 text-center">
-                          <p className="mb-0 fow-600 pb-0">₹ {details.rent} </p>
-                          <small>Rent</small>
-                        </div>
-                        <div className="col-sm-4 text-center border-left border-right border-muted">
-                          <p className="mb-0 fow-600 pb-0">
-                            ₹ {details.deposit}{" "}
-                          </p>
-                          <small>Deposit</small>
-                        </div>
-                        <div className="col-sm-4 text-center">
-                          <p className="mb-0 fow-600 pb-0">
-                            {" "}
-                            {details.area} sqft{" "}
-                          </p>
-                          <small>BuiltUp</small>
-                        </div>
-                      </div>
-                    </div>
                     <div className="card-body text-center">
                       <div className="row d-sm-flex justify-content-around align-items-center flex-wrap">
-                        <div className="col-sm-4">
+                        <div className="col-sm-6">
                           <div
                             id={`demo${i}`}
                             className="carousel slide"
@@ -587,8 +450,8 @@ const Searched = () => {
                                     <img
                                       src={`/images/property-img/${url}`}
                                       alt={`Flat Img-${i + 1}`}
-                                      width={150}
-                                      height={234}
+                                      width={300}
+                                      height={380}
                                     />
                                   </div>
                                 ))}
@@ -610,7 +473,43 @@ const Searched = () => {
                             </a>
                           </div>
                         </div>
-                        <div className="col-sm-8">
+                        <div className="col-sm-6">
+                          <div className="bg-white p-0 mb-3">
+                            <h5 className="text-left bg-white p-3 border-bottom border-muted my-3">
+                              <span className="text-uppercase">
+                                {details.subCategory}
+                              </span>{" "}
+                              <span className="text-capitalize">
+                                {details.propertyType}
+                              </span>{" "}
+                              for Rent in{" "}
+                              <span className="text-capitalize">
+                                {" "}
+                                {details.location}
+                              </span>
+                            </h5>
+                            <div className="row border-muted py-2">
+                              <div className="col-sm-4 text-center">
+                                <p className="mb-0 fow-600 pb-0">
+                                  ₹ {details.rent}{" "}
+                                </p>
+                                <small>Rent</small>
+                              </div>
+                              <div className="col-sm-4 text-center border-left border-right border-muted">
+                                <p className="mb-0 fow-600 pb-0">
+                                  ₹ {details.deposit}{" "}
+                                </p>
+                                <small>Deposit</small>
+                              </div>
+                              <div className="col-sm-4 text-center">
+                                <p className="mb-0 fow-600 pb-0">
+                                  {" "}
+                                  {details.area} sqft{" "}
+                                </p>
+                                <small>BuiltUp</small>
+                              </div>
+                            </div>
+                          </div>
                           <div
                             className="d-flex flex-wrap"
                             style={{ border: "3px double #999999" }}
